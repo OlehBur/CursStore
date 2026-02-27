@@ -1,0 +1,14 @@
+.hH1 {
+    background-color: wheat;
+    border-radius: 10%;
+    color: pink;
+    text-shadow: 1px 0 4px rgb(255, 0, 119);
+    padding: 25px 40px;
+
+}
+
+.hH1.miss {
+    background-color: rgb(255, 0, 119);
+    color: wheat;
+    text-shadow: 1px 0 4px pink;
+}

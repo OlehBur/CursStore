@@ -20,16 +20,30 @@
 
 @keyframes logo-spin {
   from {
-    transform: rotate(0deg);
+    transform: rotate(0deg) translateX(-300px);
   }
   to {
-    transform: rotate(360deg);
+    transform: rotate(360deg) translateX(400px);
+  }
+}
+
+@keyframes logoMove {
+  from {
+    transform: translate3d(-100px, 40px, 0px  )
+  }
+  to {
+    transform: translate3d(100px, -40px, 0px  )
   }
 }
 
 @media (prefers-reduced-motion: no-preference) {
   a:nth-of-type(2) .logo {
     animation: logo-spin infinite 20s linear;
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  a:nth-of-type(1) .logo {
+    animation: logoMove infinite 1s linear alternate-reverse;
   }
 }
 
