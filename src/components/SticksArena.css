@@ -1,0 +1,50 @@
+.arena {
+    margin-bottom: 20px;
+    padding: 20px;
+    border-radius: 29px;
+    background-color: rgb(42, 40, 62);
+}
+
+.stickRow {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 0px;
+}
+
+/* .stick {
+    background-color: #ffffff; 
+    border-radius: 5px;
+    margin: 10px;
+} */
+
+.stickHorizontal {
+    padding: 0;
+    border: none;
+    /*button reset styles  */
+
+    border-radius: 5px;
+    width: 50px;
+    height: 10px;
+    margin-inline: 5px;
+    background-color: #cbcbcb;
+}
+
+.stickVertical {
+    padding: 0;
+    border: none;
+
+    border-radius: 5px;
+    width: 10px;
+    height: 50px;
+    /* margin-inline: 25px; */
+    background-color: #cbcbcb;
+}
+
+.block {
+    width: 50px;
+    height: 50px;
+    display: flex;/*container*/
+    justify-content: center;
+    align-items: center;
+    background-color: #ff6262;
+}
