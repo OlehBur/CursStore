@@ -1,4 +1,4 @@
-import { useState } from "react";
+// import { useState } from "react";
 import "./SticksArena.css"
 
 type StickProps = {

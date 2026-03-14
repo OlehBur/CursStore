@@ -17,7 +17,7 @@ type StickProps = {
 export default function Stick(prop: StickProps) {
     const elem: JSX.Element[] = [];
     const [isClicked, setClick] = useState<boolean | null>(null);
-    const [isBoxCLicked, setBoxClick] = useState<boolean | null>(null);
+    // const [isBoxCLicked, setBoxClick] = useState<boolean | null>(null);
     // const [isFirstPlayer, setPlayer] = useState<boolean>(false);
     let boxClickRes: boolean | null = null;
     const backCol = isClicked == null ? "#cbcbcb" : isClicked ? "#9eff5d" : "#ff7ce5";
@@ -35,9 +35,9 @@ export default function Stick(prop: StickProps) {
         else
             boxClickRes = prop.onChangeBoxState(prop.indX, prop.indY, "top", prop.indX, prop.indY - 1, "bottom");
 
-        if (boxClickRes)
-            setBoxClick(boxClickRes);
-        else//fail
+        if (!boxClickRes)
+            // setBoxClick(boxClickRes);
+        // else//fail
             prop.onChangePlayer()// setPlayer(prop.onChangePlayer());
 
         // console.log("isFirstPlyr: " + prop.isFirstPlayer);
