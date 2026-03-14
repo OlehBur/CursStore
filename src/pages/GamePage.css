@@ -1,0 +1,90 @@
+.mainFrame {
+    padding: 1em 2rem;
+    border: 2px solid gold;
+    border-radius: 15px
+}
+
+.scoreBlock {
+    width: 60px;
+    height: 60px;
+    border-radius: 10px;
+    background: #222;
+    color: white;
+    font-size: 1.5rem;
+    font-weight: bolder;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid #ffffff;
+}
+
+.selectScoreBlock {
+    border: 2px solid #fff64f;
+}
+
+.ytTxt {
+    margin: 0.5rem 0rem;
+    font-size: 20px;
+    color: #fff64f;
+    font-weight: bold;
+}
+
+.emptyTxt {
+    color: #00000000;
+}
+
+.arena {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2rem;
+}
+
+.player1 {
+    background-color: #c75eb2;
+}
+
+.player2 {
+    background-color: #76bd46;
+}
+
+
+.winnerOverlay {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.45);
+    z-index: 9999;
+}
+
+/* картка перемоги */
+.winnerCard {
+    background: #000b4b;
+    padding: 2.2rem 3rem;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 20px 20px 40px rgba(0, 0, 0, 1);
+    min-width: 320px;
+}
+
+/* великий текст перемоги */
+.winnerText {
+    font-size: 2rem;
+    font-weight: 800;
+    margin-bottom: 1.2rem;
+    color: #ffffff;
+}
+
+/* кнопка перезапуску — помітна, з тінню */
+.restartBtn {
+    background: #6c00d1;
+    color: rgb(255, 255, 255);
+    border: none;
+    padding: 0.8rem 1.2rem;
+    border-radius: 10px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 5px 10px 20px rgba(255, 253, 124, 0.35);
+}
