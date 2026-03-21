@@ -24,5 +24,5 @@ export default function Block(prop: StickProps) {
 
 
     return (<div className="block" style={{ backgroundColor: color }
-    }>{prop.str} </div >);
+    }>{/* prop.str */} </div >);
 };

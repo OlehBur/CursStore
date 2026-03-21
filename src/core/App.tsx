@@ -9,6 +9,7 @@ import './App.css'
 import GamePage from '../pages/GamePage.tsx'
 import SettingsPage from '../pages/SettingsPage.tsx'
 import ProfilePage from '../pages/ProfilePage.tsx'
+import AuthPopup from '../components/AuthWnd.tsx'
 
 function App() {
   const navigate = useNavigate()
@@ -17,6 +18,9 @@ function App() {
     <Routes>
       <Route path="/" element={<>
         <h1>Головна сторінка</h1>
+        <button onClick={() => navigate('/auth')}>
+          Авторизація
+        </button>
         <button onClick={() => navigate('/profile')}>
           Профіль
         </button>
@@ -26,7 +30,9 @@ function App() {
         <button onClick={() => navigate('/ttt')}>
           Tic Tac Toe
         </button>
+        <AuthPopup />
       </>} />
+      <Route path="/auth" element={<AuthPopup />} />
       <Route path="/profile" element={<ProfilePage />} />
       <Route path="/settings" element={<SettingsPage />} />
       <Route path="/ttt" element={<GamePage />} />
