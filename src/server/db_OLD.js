@@ -1,10 +1,11 @@
+require('dotenv').config();
 const sql = require("mssql");
 
 const config = {
-  user: "defUser",          
-  password: "resUfed",
-  server: ".\\SQLEXPRESS",
-  database: "MotoShopDB",
+  user: process.env.DB_CLIET_LOG,
+  password: process.env.DB_CLIENT_PASS,
+  server: process.env.DB_SERVER,
+  database: process.env.DB_DATABASE,
   options: {
     trustServerCertificate: true
   }

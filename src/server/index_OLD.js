@@ -1,17 +1,16 @@
 const express = require("express");
 const crypto = require("crypto");
 const nodemailer = require("nodemailer");
-const { getPool } = require("./db");
+const { getPool } = require("./db_OLD");
 require('dotenv').config(); 
 const nodemailer = require('nodemailer');
 
 const app = express();
 app.use(express.json());
 
-// просте симетричне шифрування (масочка)
 const secret = "mySecretKey123"; // ключ для шифрування
 
-function encrypt(text) {
+function encrypt(text) {//symet
     const cipher = crypto.createCipher("aes-256-ctr", secret);
     return cipher.update(text, "utf8", "hex") + cipher.final("hex");
 }

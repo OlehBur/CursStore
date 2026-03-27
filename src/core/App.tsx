@@ -10,17 +10,19 @@ import GamePage from '../pages/GamePage.tsx'
 import SettingsPage from '../pages/SettingsPage.tsx'
 import ProfilePage from '../pages/ProfilePage.tsx'
 import AuthPopup from '../components/AuthWnd.tsx'
+import { useState } from 'react'
 
 function App() {
+  const [userId, setUserId] = useState<number>(-1);
   const navigate = useNavigate()
 
   return (
     <Routes>
       <Route path="/" element={<>
         <h1>Головна сторінка</h1>
-        <button onClick={() => navigate('/auth')}>
+        {/* <button onClick={() => navigate('/auth')}>
           Авторизація
-        </button>
+        </button> */}
         <button onClick={() => navigate('/profile')}>
           Профіль
         </button>
@@ -30,10 +32,18 @@ function App() {
         <button onClick={() => navigate('/ttt')}>
           Tic Tac Toe
         </button>
-        <AuthPopup />
+        {userId === -1 ? (
+          <AuthPopup onLoginSuccess={(id) => setUserId(id)} />
+        ) : (
+          <div className="welcome-screen">
+            <h1>Ви успішно увійшли!</h1>
+            <p>Ваш ID користувача в базі: <strong>{userId}</strong></p>
+            <button onClick={() => setUserId(-1)}>Вийти</button>
+          </div>
+        )}
       </>} />
-      <Route path="/auth" element={<AuthPopup />} />
-      <Route path="/profile" element={<ProfilePage />} />
+      {/* <Route path="/auth" element={<AuthPopup />} /> */}
+      <Route path="/profile" element={<ProfilePage userId={userId} />} />
       <Route path="/settings" element={<SettingsPage />} />
       <Route path="/ttt" element={<GamePage />} />
 
