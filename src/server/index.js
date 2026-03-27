@@ -96,16 +96,33 @@ app.get('/api/profile/:Id', (req, res) => {
 
 app.post('/api/register', (req, res) => {
     const { name, email, password } = req.body;
-    const encEmail = encrypt(email);
-    const encPass = encrypt(password);
-    const tempKey = Math.random().toString(36).substring(2, 12); // rand 10 sym
 
-    const sql = "INSERT INTO Users (Name, Email, PassEnc, TempKey) VALUES (?, ?, ?, ?)";
-    db.query(sql, [name, encEmail, encPass, tempKey], (err) => {
-        if (err) return res.status(500).json({ error: err.message });
+    /// check email dupl
+    db.query("SELECT Email FROM Users", (err, results) => {
+        if (err) return res.status(500).json({ error: "Помилка бази даних" });
 
-        console.log(`Код підтвердження для ${email}: ${tempKey}`);
-        res.json({ success: true, message: "Користувача створено, введіть код" });
+        const emailExists = results.some(u => {
+            try {
+                return decrypt(u.Email).toLowerCase() === email.toLowerCase();
+            } catch (e) { return false; }
+        });
+
+        if (emailExists) {
+            return res.status(400).json({ error: "Користувач з таким Email вже зареєстрований" });
+        }
+        ///
+
+        const encEmail = encrypt(email);
+        const encPass = encrypt(password);
+        const tempKey = Math.random().toString(36).substring(2, 12); // rand 10 sym
+
+        const sql = "INSERT INTO Users (Name, Email, PassEnc, TempKey) VALUES (?, ?, ?, ?)";
+        db.query(sql, [name, encEmail, encPass, tempKey], (err) => {
+            if (err) return res.status(500).json({ error: err.message });
+
+            console.log(`Код підтвердження для ${email}: ${tempKey}`);
+            res.json({ success: true, message: "Користувача створено, введіть код" });
+        });
     });
 });
 

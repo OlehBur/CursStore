@@ -16,6 +16,19 @@ const AuthPopup = ({ onLoginSuccess }: AuthProps) => {
     };
 
     const handleAction = async () => {
+        if (mode !== "confirm") {//email validation
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(form.email)) {
+                alert("Будь ласка, введіть коректну адресу електронної пошти (наприклад, user@example.com).");
+                return; //stop
+            }
+        }
+
+        if (mode === "register" && form.password.length < 6) {//pass validation
+            alert("Пароль має бути не менше 6 символів.");
+            return;
+        }
+
         let url = "";
         let body = {};
 
