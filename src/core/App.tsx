@@ -11,6 +11,7 @@ import SettingsPage from '../pages/SettingsPage.tsx'
 import ProfilePage from '../pages/ProfilePage.tsx'
 import AuthPopup from '../components/AuthWnd.tsx'
 import { useState } from 'react'
+import StoreManager from '../pages/StoreManager.tsx'
 
 function App() {
   const [userId, setUserId] = useState<number>(-1);
@@ -25,6 +26,9 @@ function App() {
         </button> */}
         <button onClick={() => navigate('/profile')}>
           Профіль
+        </button>
+        <button onClick={() => navigate('/store_profile')}>
+          Профіль Магазину
         </button>
         <button onClick={() => navigate('/settings')}>
           Налаштування
@@ -44,6 +48,7 @@ function App() {
       </>} />
       {/* <Route path="/auth" element={<AuthPopup />} /> */}
       <Route path="/profile" element={<ProfilePage userId={userId} />} />
+      <Route path="/store_profile" element={<StoreManager userId={userId} />} />
       <Route path="/settings" element={<SettingsPage />} />
       <Route path="/ttt" element={<GamePage />} />
 

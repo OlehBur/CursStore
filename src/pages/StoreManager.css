@@ -1,0 +1,174 @@
+.store-container {
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Header */
+.store-header {
+    background: #1a1a1a;
+    color: rgb(78, 80, 109);
+    padding: 40px;
+    border-radius: 15px;
+    margin-bottom: 30px;
+}
+
+.header-content {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+}
+
+.store-logo-main {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid #3498db;
+}
+
+.btn-main{
+    margin: 10px 0px;
+}
+
+.btn-edit-store {
+    background: transparent;
+    border: 1px solid #3498db;
+    color: #3498db;
+    padding: 8px 20px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: 0.3s;
+}
+
+.btn-edit-store:hover {
+    background: #3498db;
+    color: rgb(105, 105, 105);
+}
+
+/* Grid */
+.products-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 25px;
+}
+
+.product-card {
+    background: rgb(236, 218, 203);
+    color: #1a1a1a;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    transition: transform 0.3s;
+    display: flex;
+    flex-direction: column;
+}
+
+.product-card:hover {
+    transform: translateY(-5px);
+}
+
+.product-img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+}
+
+.product-details {
+    padding: 15px;
+    text-align: center;
+}
+
+.product-price {
+    display: block;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #27ae60;
+    margin: 10px 0;
+}
+
+/* Add New Card (plus) */
+.add-new {
+    border: 3px dashed #ccc;
+    background: #ffffff;
+    cursor: pointer;
+    justify-content: center;
+    align-items: center;
+    min-height: 300px;
+}
+
+.plus-wrapper {
+    text-align: center;
+    color: #888;
+}
+
+.plus-icon {
+    font-size: 50px;
+    display: block;
+    line-height: 1;
+}
+
+/* Modal */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background: rgb(64, 116, 117);
+    padding: 30px;
+    border-radius: 12px;
+    width: 100%;
+    max-width: 500px;
+}
+
+.modal-content.wide {
+    max-width: 800px;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+input, textarea {
+    width: 100%;
+    padding: 12px;
+    margin: 8px 0;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    box-sizing: border-box;
+}
+
+.stats label {
+    font-weight: bold;
+    color: #555;
+    margin-top: 10px;
+    display: block;
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.btn-save {
+    background: #3498db;
+    color: white;
+    border: none;
+    padding: 10px 25px;
+    border-radius: 6px;
+    cursor: pointer;
+}
