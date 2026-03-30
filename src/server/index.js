@@ -78,6 +78,71 @@ function decrypt(hash) {
     }
 }
 
+app.get('/api/products/limits', (req, res) => {
+    const sql = `
+        SELECT 
+            MAX(Price) as maxPrice, 
+            MAX(CC) as maxCC, 
+            MAX(Weight) as maxWeight, 
+            MAX(HP) as maxHP, 
+            MAX(NM) as maxNM 
+        FROM Products`;
+    db.query(sql, (err, results) => {
+        if (err) return res.status(500).json({ error: err.message });
+        res.json(results[0]);
+    });
+});
+
+app.get('/api/products/search', (req, res) => {
+    let { 
+        q = '', 
+        sortBy = 'Popularity', 
+        order = 'DESC', 
+        page = 1,
+        minPrice, maxPrice,
+        minCC, maxCC,
+        minWeight, maxWeight,
+        minHP, maxHP,
+        minNM, maxNM
+    } = req.query;
+
+    const limit = 20;
+    const offset = (page - 1) * limit;
+
+    let sql = "SELECT * FROM Products WHERE Name LIKE ?";// def
+    let params = [`%${q}%`];
+
+    const addRangeFilter = (field, min, max) => {// filters if exist
+        if (min !== undefined) { sql += ` AND ${field} >= ?`; params.push(min); }
+        if (max !== undefined) { sql += ` AND ${field} <= ?`; params.push(max); }
+    };
+
+    addRangeFilter('Price', minPrice, maxPrice);
+    addRangeFilter('CC', minCC, maxCC);
+    addRangeFilter('Weight', minWeight, maxWeight);
+    addRangeFilter('HP', minHP, maxHP);
+    addRangeFilter('NM', minNM, maxNM);
+
+    const allowedSort = ['Popularity', 'Price', 'Name'];//avoidance SQL injection)
+    if (!allowedSort.includes(sortBy)) sortBy = 'Popularity';
+    sql += ` ORDER BY ${sortBy} ${order === 'ASC' ? 'ASC' : 'DESC'}`;
+
+    sql += ` LIMIT ? OFFSET ?`;// separate viewed items 
+    params.push(limit, offset);
+
+    db.query(sql, params, (err, results) => {
+        if (err) return res.status(500).json({ error: err.message });
+        
+        db.query("SELECT COUNT(*) as total FROM Products WHERE Name LIKE ?", [`%${q}%`], (err, countRes) => {//main qnt for separate
+            res.json({
+                products: results,
+                total: countRes[0].total,
+                totalPages: Math.ceil(countRes[0].total / limit)
+            });
+        });
+    });
+});
+
 app.get('/api/store/:userId', (req, res) => {//check & get data fr shop by userId
     const userId = req.params.userId;
     const sql = "SELECT * FROM Stores WHERE UserId = ?";

@@ -1,14 +1,7 @@
 import { useNavigate } from "react-router-dom"
 import "./ProfilePage.css";
 import { useEffect, useState } from "react";
-
-interface Product {
-    Id: number;
-    Name: string;
-    Price: number;
-    ImageUrl: string;
-    Quantity?: number;
-}
+import type { Product } from "../core/types/Product";
 
 interface UserInfo {
     Name: string;
