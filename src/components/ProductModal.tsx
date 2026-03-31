@@ -1,5 +1,5 @@
 import { useState } from "react";
-import "../pages/StoreManager.css"
+// import "../pages/StoreManager.css"
 
 const ProductModal = ({ product, shopId, onClose, onSave }: any) => {
     const [form, setForm] = useState({
@@ -22,6 +22,15 @@ const ProductModal = ({ product, shopId, onClose, onSave }: any) => {
         });
         onSave();
         onClose();
+    };
+    const handleDelete = async () => {
+        if (!window.confirm(`Ви впевнені, що хочете видалити ${product.Name}?`)) return;
+
+        await fetch(`http://localhost:3001/api/product/${product.Id}`, {
+            method: 'DELETE'
+        });
+        onSave(); // оновлюємо список
+        onClose(); // закриваємо модалку
     };
 
     return (
@@ -63,6 +72,13 @@ const ProductModal = ({ product, shopId, onClose, onSave }: any) => {
                     </div>
                 </div>
                 <div className="modal-actions">
+                    <div className="left-actions">
+                        {product && (                    /* if prod exist*/
+                            <button className="btn-delete" onClick={handleDelete}>
+                                🗑️ Видалити продукт
+                            </button>
+                        )}
+                    </div>
                     <button onClick={onClose}>Закрити</button>
                     <button className="btn-save" onClick={handleSave}>Зберегти продукт</button>
                 </div>

@@ -2,27 +2,23 @@ import { useEffect, useState } from 'react';
 import './StoreManager.css';
 import ProductModal from '../components/ProductModal';
 import { useNavigate } from 'react-router-dom';
+import type { Product } from '../core/types/Product';
 
-interface Product {
-    Id?: number;
-    Name: string;
-    Description: string;
-    Price: number;
-    ImageUrl: string;
-    VideoUrl: string;
-    CC: number;
-    Weight: number;
-    HP: number;
-    NM: number;
-    ShopId: number;
+
+type SM_prop = {
+    userId: number;
+    storeId: number;
+    itemPage_nav: string;
 }
 
-const StoreManager = ({ userId }: { userId: number }) => {
+const StoreManager = (prop: SM_prop) => {
     const navigate = useNavigate();
     const [store, setStore] = useState<any>(null);
     const [products, setProducts] = useState<Product[]>([]);
     const [loading, setLoading] = useState(true);
 
+    const isOwner = store && store.UserId === prop.userId;//is curr user Owner
+    
     // modals
     const [isStoreModalOpen, setStoreModalOpen] = useState(false);
     const [isProductModalOpen, setProductModalOpen] = useState(false);
@@ -82,7 +78,7 @@ const StoreManager = ({ userId }: { userId: number }) => {
                     </button>
                 </div>
             ) : (
-                <div className="store-dashboard">
+                <div>{ /*className="store-dashboard"*/}
                     <header className="store-header">
                         <div className="header-content">
                             <img src={store.LogoUrl} alt="Logo" className="store-logo-main" />
@@ -96,9 +92,12 @@ const StoreManager = ({ userId }: { userId: number }) => {
                         </div>
                     </header>
 
-                    <div className="products-grid">
+                    <div className="store-products-grid">
                         {/* add new prod block*/}
-                        <div className="product-card add-new" onClick={() => { setSelectedProduct(null); setProductModalOpen(true); }}>
+                        <div className="product-card add-new" onClick={() => {
+                            setSelectedProduct(null);
+                            setProductModalOpen(true);
+                        }}>
                             <div className="plus-wrapper">
                                 <span className="plus-icon">+</span>
                                 <p>Додати продукт</p>
@@ -107,12 +106,21 @@ const StoreManager = ({ userId }: { userId: number }) => {
 
                         {/* prods blocks */}
                         {products.map((p) => (
-                            <div key={p.Id} className="product-card">
-                                <img src={p.ImageUrl} alt={p.Name} className="product-img" />
-                                <div className="product-details">
+                            <div key={p.Id}
+                                onClick={() => {
+                                    setSelectedProduct(p);
+                                    navigate(itemPage_nav);
+                                }}
+                                className="product-card">
+                                <img src={p.ImageUrl} alt={p.Name} className="card-product-img" />
+                                <div className='card-content'>
                                     <h3>{p.Name}</h3>
                                     <span className="product-price">${p.Price}</span>
-                                    <button className="btn-edit-prod" onClick={() => { setSelectedProduct(p); setProductModalOpen(true); }}>
+                                    <button className="btn-edit-prod" onClick={(е) => {
+                                        е.stopPropagation(); // ban parent events
+                                        setSelectedProduct(p);
+                                        setProductModalOpen(true);
+                                    }}>
                                         Редагувати
                                     </button>
                                 </div>
@@ -120,35 +128,43 @@ const StoreManager = ({ userId }: { userId: number }) => {
                         ))}
                     </div>
                 </div>
-            )}
+            )
+            }
 
-            {isStoreModalOpen && (
-                <div className="modal-overlay">
-                    <div className="modal-content">
-                        <h2>{store ? "Редагувати магазин" : "Новий магазин"}</h2>
-                        <input value={storeForm.Name} placeholder="Назва магазину" onChange={e => setStoreForm({ ...storeForm, Name: e.target.value })} />
-                        <textarea value={storeForm.Description} placeholder="Опис" onChange={e => setStoreForm({ ...storeForm, Description: e.target.value })} />
-                        <input value={storeForm.LogoUrl} placeholder="URL Логотипу" onChange={e => setStoreForm({ ...storeForm, LogoUrl: e.target.value })} />
-                        <div className="modal-actions">
-                            <button onClick={() => setStoreModalOpen(false)}>Скасувати</button>
-                            <button className="btn-save" onClick={handleStoreSubmit}>Зберегти</button>
+            {
+                isStoreModalOpen && (
+                    <div className="modal-overlay">
+                        <div className="modal-content">
+                            <h2>{store ? "Редагувати магазин" : "Новий магазин"}</h2>
+                            <input value={storeForm.Name} placeholder="Назва магазину"
+                                onChange={e => setStoreForm({ ...storeForm, Name: e.target.value })} />
+                            <textarea value={storeForm.Description} placeholder="Опис"
+                                onChange={e => setStoreForm({ ...storeForm, Description: e.target.value })} />
+                            <input value={storeForm.LogoUrl} placeholder="URL Логотипу"
+                                onChange={e => setStoreForm({ ...storeForm, LogoUrl: e.target.value })} />
+                            <div className="modal-actions">
+                                <button onClick={() => setStoreModalOpen(false)}>Скасувати</button>
+                                <button className="btn-save" onClick={handleStoreSubmit}>Зберегти</button>
+                            </div>
                         </div>
                     </div>
-                </div>
-            )}
+                )
+            }
 
-            {isProductModalOpen && (
-                <ProductModal
-                    product={selectedProduct}
-                    shopId={store?.Id}
-                    onClose={() => setProductModalOpen(false)}
-                    onSave={() => fetchProducts(store.Id)}
-                />
-            )}
+            {
+                isProductModalOpen && (
+                    <ProductModal
+                        product={selectedProduct}
+                        shopId={store?.Id}
+                        onClose={() => setProductModalOpen(false)}
+                        onSave={() => fetchProducts(store.Id)}
+                    />
+                )
+            }
             <button className="btn-main" onClick={() => navigate('/')}>
                 ← Повернутися на головну
             </button>
-        </div>
+        </div >
     );
 };
 

@@ -1,0 +1,126 @@
+.product-page-container {
+    min-width: 600px;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px 20px;
+    background: #1a1a1a;
+    color: #eee;
+    min-height: 100vh;
+    overflow: hidden;
+}
+
+.product-title {
+    text-align: center;
+    font-size: 32px;
+    margin-bottom: 30px;
+    color: #ff3e3e;
+    text-transform: uppercase;
+}
+
+.media-and-actions {
+    display: flex;
+    gap: 30px;
+    margin-bottom: 40px;
+}
+
+.media-block {
+    flex: 3;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.aspect-ratio-box {
+    position: relative;
+    width: 100%;
+    padding-top: 56.25%; /* 16:9 Aspect Ratio */
+    background: #000;
+    border-radius: 12px;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.media-content {
+    position: absolute;
+    top: 0;
+    left: 0;
+    /* width: 600px; */
+    width: 100%;
+    height: 100%;
+    object-fit: contain; /*insert photo insted cut*/
+}
+
+.action-sidebar {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.btn-action {
+    padding: 15px;
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.3s;
+    background: #333;
+    color: white;
+}
+
+.btn-action.active { background: #ff3e3e; }
+.btn-action:hover { transform: scale(1.02); }
+
+.product-details {
+    background: #222;
+    padding: 30px;
+    border-radius: 15px;
+}
+
+.specs-table {
+    width: 100%;
+    margin-top: 20px;
+    border-collapse: collapse;
+}
+
+.specs-table th {
+    background: #ff3e3e;
+    padding: 12px;
+    text-align: left;
+}
+
+.specs-table td {
+    padding: 12px;
+    border-bottom: 1px solid #444;
+}
+
+.specs-table tr:hover { background: #2a2a2a; }
+
+.store-info-badge {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 10px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #444;
+}
+
+.store-logo-mini {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1px solid #ff3e3e;
+}
+
+.store-name-mini {
+    font-weight: bold;
+    font-size: 30px;
+    color: #ccc;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}

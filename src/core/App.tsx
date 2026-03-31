@@ -13,11 +13,15 @@ import AuthPopup from '../components/AuthWnd.tsx'
 import { useState } from 'react'
 import StoreManager from '../pages/StoreManager.tsx'
 import MainStore from '../pages/MainStore.tsx'
+import ProductPage from '../pages/ProductPage.tsx'
 
 function App() {
   const [userId, setUserId] = useState<number>(-1);
+  const [prodId, setProdId] = useState<number>(-1);
+  const [store, setStore] = useState<any>(null);
   // const auth_nav = '/auth';
   const profile_nav = '/profile';
+  const product_nav = '/product';
   const store_prof_nav = '/store_profile';
   const settings_nav = '/settings';
   const game_nav = '/game';
@@ -45,7 +49,10 @@ function App() {
           <AuthPopup onLoginSuccess={(id) => setUserId(id)} />
         ) : (
           <div className="welcome-screen">
-            <MainStore OnLogout={() => setUserId(-1)} /*auth_nav={auth_nav}*/ profile_nav={profile_nav} store_prof_nav={store_prof_nav} settings_nav={settings_nav} game_nav={game_nav} stores_nav='' item_nav='' />
+            <MainStore
+              OnLogout={() => setUserId(-1)}
+              OnProductSelect={(id) => setProdId(id)}
+            /*auth_nav={auth_nav}*/ profile_nav={profile_nav} store_prof_nav={store_prof_nav} settings_nav={settings_nav} game_nav={game_nav} stores_nav='' item_nav={product_nav} />
           //   <h1>Ви успішно увійшли!</h1>
           //   <p>Ваш ID користувача в базі: <strong>{userId}</strong></p>
             <button onClick={() => setUserId(-1)}>Вийти</button>
@@ -53,8 +60,11 @@ function App() {
         )}
       </>} />
       {/* <Route path="/auth" element={<AuthPopup />} /> */}
-      <Route path={profile_nav} element={<ProfilePage userId={userId} />} />
-      <Route path={store_prof_nav} element={<StoreManager userId={userId} />} />
+      <Route path={product_nav} element={<ProductPage userId={userId} prodId={prodId} store_prof_nav={store_prof_nav} SetStore={(data) => setStore(data)} storeData={store}/>} />
+      <Route path={profile_nav} element={<ProfilePage userId={userId}
+        itemPageNav={product_nav}
+        OnProductSelect={(id) => setProdId(id)} />} />
+      <Route path={store_prof_nav} element={<StoreManager userId={userId} itemPage_nav={product_nav} />} />
       <Route path={settings_nav} element={<SettingsPage />} />
       <Route path={game_nav} element={<GamePage />} />
 

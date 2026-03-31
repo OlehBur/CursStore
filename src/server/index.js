@@ -94,10 +94,10 @@ app.get('/api/products/limits', (req, res) => {
 });
 
 app.get('/api/products/search', (req, res) => {
-    let { 
-        q = '', 
-        sortBy = 'Popularity', 
-        order = 'DESC', 
+    let {
+        q = '',
+        sortBy = 'Popularity',
+        order = 'DESC',
         page = 1,
         minPrice, maxPrice,
         minCC, maxCC,
@@ -132,12 +132,76 @@ app.get('/api/products/search', (req, res) => {
 
     db.query(sql, params, (err, results) => {
         if (err) return res.status(500).json({ error: err.message });
-        
+
+        // const totalPages = Math.ceil(results[0].total / limit);
+
         db.query("SELECT COUNT(*) as total FROM Products WHERE Name LIKE ?", [`%${q}%`], (err, countRes) => {//main qnt for separate
             res.json({
                 products: results,
                 total: countRes[0].total,
-                totalPages: Math.ceil(countRes[0].total / limit)
+                totalPages: Math.ceil(countRes[0].total / limit)//Math.ceil(countRes[0].total / limit)//totalPages||1 
+            });
+        });
+    });
+});
+
+app.get('/api/products/:id', (req, res) => {
+    const productId = req.params.id;
+
+    db.query("UPDATE Products SET Popularity = Popularity + 1 WHERE Id = ?", [productId]);// upd popular
+    db.query("SELECT * FROM Products WHERE Id = ?", [productId], (err, results) => {// get prod data
+        if (err || results.length === 0) return res.status(404).json({ error: "Товар не знайдено" });
+        res.json(results[0]);
+    });
+});
+
+
+app.post('/api/cart/toggle', (req, res) => {//cart
+    const { userId, productId } = req.body;
+    // check if exist
+    db.query("SELECT * FROM CartItems WHERE UserId = ? AND ProductId = ?", [userId, productId], (err, results) => {
+        if (results.length > 0) {
+            db.query("DELETE FROM CartItems WHERE UserId = ? AND ProductId = ?", [userId, productId]);
+            res.json({ action: 'removed' });
+        } else {
+            db.query("INSERT INTO CartItems (UserId, ProductId, Quantity) VALUES (?, ?, 1)", [userId, productId]);
+            res.json({ action: 'added' });
+        }
+    });
+});
+
+app.post('/api/fav/toggle', (req, res) => {//fav
+    const { userId, productId } = req.body;
+    // check if exist
+    db.query("SELECT * FROM Favorites WHERE UserId = ? AND ProductId = ?", [userId, productId], (err, results) => {
+        if (results.length > 0) {
+            db.query("DELETE FROM Favorites WHERE UserId = ? AND ProductId = ?", [userId, productId]);
+            res.json({ action: 'removed' });
+        } else {
+            db.query("INSERT INTO Favorites (UserId, ProductId) VALUES (?, ?)", [userId, productId]);
+            res.json({ action: 'added' });
+        }
+    });
+});
+
+app.get('/api/user-status', (req, res) => {
+    const { userId, prodId } = req.query;
+
+    if (!userId || !prodId) 
+        return res.status(400).json({ error: "Відсутні параметри userId або prodId" });
+
+    const cartSql = "SELECT COUNT(*) as count FROM CartItems WHERE UserId = ? AND ProductId = ?";
+    const favSql = "SELECT COUNT(*) as count FROM Favorites WHERE UserId = ? AND ProductId = ?";
+
+    db.query(cartSql, [userId, prodId], (err, cartResults) => {
+        if (err) return res.status(500).json({ error: err.message });
+
+        db.query(favSql, [userId, prodId], (err, favResults) => {
+            if (err) return res.status(500).json({ error: err.message });
+
+            res.json({
+                inCart: cartResults[0].count > 0,
+                inFavorites: favResults[0].count > 0
             });
         });
     });
@@ -180,12 +244,32 @@ app.put('/api/store/:id', (req, res) => {// edit shop
     });
 });
 
+app.get('/api/store/details/:id', (req, res) => {//get
+    const { id } = req.params;
+    const sql = "SELECT * FROM Stores WHERE Id = ?";
+    db.query(sql, [id], (err, results) => {
+        if (err) return res.status(500).json({ error: err.message });
+        if (results.length === 0) return res.json({ exists: false });
+        res.json({ exists: true, store: results[0] });
+    });
+});
+
 app.get('/api/store/:shopId/products', (req, res) => {//get prod fr exact shop
     const sql = "SELECT * FROM Products WHERE ShopId = ?";
     db.query(sql, [req.params.shopId], (err, results) => {
         if (err)
             return res.status(500).json({ error: err.message });
         res.json(results);
+    });
+});
+
+app.get('/api/store/short-details/:shopId', (req, res) => {
+    const shopId = req.params.shopId;
+    const sql = "SELECT Name, LogoUrl FROM Stores WHERE Id = ?";
+    db.query(sql, [shopId], (err, results) => {
+        if (err) return res.status(500).json({ error: err.message });
+        if (results.length === 0) return res.status(404).json({ error: "Магазин не знайдено" });
+        res.json(results[0]);
     });
 });
 
@@ -207,6 +291,15 @@ app.post('/api/product/save', (req, res) => {// add/edit prod (universal)
             res.json({ success: true });
         });
     }
+});
+
+app.delete('/api/product/:id', (req, res) => {
+    const { id } = req.params;
+    const sql = "DELETE FROM Products WHERE Id = ?";
+    db.query(sql, [id], (err) => {
+        if (err) return res.status(500).json({ error: err.message });
+        res.json({ success: true });
+    });
 });
 
 app.get('/api/profile/:Id', (req, res) => {
@@ -356,7 +449,7 @@ app.post('/api/login', (req, res) => {
                 return decryptedEmail.trim() === email.trim() && decryptedPass === password;
             });
 
-            if (!user) 
+            if (!user)
                 return res.status(401).json({ error: "Невірний логін або пароль" });
 
             res.json({ success: true, userId: user.Id });

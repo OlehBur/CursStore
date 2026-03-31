@@ -1,34 +1,38 @@
-import { useNavigate } from "react-router-dom"
 import "./ProfilePage.css";
 import { useEffect, useState } from "react";
 import type { Product } from "../core/types/Product";
+import BackButton from "../components/BackToMainButton";
+import { useNavigate } from "react-router-dom";
 
 interface UserInfo {
     Name: string;
     Email: string;
 }
 
-const ProfilePage = ({ userId }: { userId: number }) => {
+type PP_prop = {
+    userId: number;
+    itemPageNav: string;
+
+    OnProductSelect: (id: number) => void;
+}
+
+const ProfilePage = (prop: PP_prop) => {
     const [user, setUser] = useState<UserInfo | null>(null);
     const [favorites, setFavorites] = useState<Product[]>([]);
     const [cart, setCart] = useState<Product[]>([]);
+    const navigate = useNavigate();
 
     const [favPage, setFavPage] = useState(1);
     const [cartPage, setCartPage] = useState(1);
     const itemsPerPage = 5;
 
-    const navigate = useNavigate();
-    const backButton = <button onClick={() => navigate('/')}>
-        ← Повернутися на головну
-    </button>;
-
     useEffect(() => {
-        if (userId === -1) return;
+        if (prop.userId === -1) return;
 
         // load prod data, fav & cart
         const fetchProfileData = async () => {
             try {
-                const res = await fetch(`http://localhost:3001/api/profile/${userId}`);
+                const res = await fetch(`http://localhost:3001/api/profile/${prop.userId}`);
                 const data = await res.json();
                 setUser(data.user);
                 setFavorites(data.favorites);
@@ -39,11 +43,11 @@ const ProfilePage = ({ userId }: { userId: number }) => {
         };
 
         fetchProfileData();
-    }, [userId]);
+    }, [prop.userId]);
 
-    if (userId === -1)
+    if (prop.userId === -1)
         return <div className="profile-container"><h1>Будь ласка, авторизуйтесь</h1>
-            {backButton}
+            <BackButton />
         </div>;
 
     // Summ
@@ -81,7 +85,7 @@ const ProfilePage = ({ userId }: { userId: number }) => {
                 <h1>Вітаю Вас, {user?.Name || "Користувач"}!</h1>
                 <div className="user-details">
                     <p><strong>Email:</strong> {user?.Email}</p>
-                    <p><strong>Ідентифікатор користувача:</strong> {userId}</p>
+                    <p><strong>Ідентифікатор користувача:</strong> {prop.userId}</p>
                 </div>
             </div>
 
@@ -91,10 +95,15 @@ const ProfilePage = ({ userId }: { userId: number }) => {
                     <>
                         <div className="product-list">
                             {paginate(favorites, favPage).map((item) => (
-                                <div key={item.Id} className="product-card">
+                                <div key={item.Id}
+                                    onClick={() => {
+                                        prop.OnProductSelect(item.Id);
+                                        navigate(prop.itemPageNav);
+                                    }}
+                                    className="product-card">
                                     <img src={item.ImageUrl} alt={item.Name} />
                                     <h3>{item.Name}</h3>
-                                    <p>{item.Price} грн</p>
+                                    <p>{item.Price} $</p>
                                 </div>
                             ))}
                         </div>
@@ -109,14 +118,19 @@ const ProfilePage = ({ userId }: { userId: number }) => {
                     <>
                         <div className="cart-summary">
                             <p>Всього товарів: <strong>{totalItems}</strong></p>
-                            <p>Загальна сума: <strong>{totalAmount} грн</strong></p>
+                            <p>Загальна сума: <strong>{totalAmount} $</strong></p>
                         </div>
                         <div className="product-list">
                             {paginate(cart, cartPage).map((item) => (
-                                <div key={item.Id} className="product-card">
+                                <div key={item.Id}
+                                    onClick={() => {
+                                        prop.OnProductSelect(item.Id);
+                                        navigate(prop.itemPageNav);
+                                    }}
+                                    className="product-card">
                                     <img src={item.ImageUrl} alt={item.Name} />
                                     <h3>{item.Name}</h3>
-                                    <p>{item.Price} грн (x{item.Quantity})</p>
+                                    <p>{item.Price} $ (x{item.Quantity})</p>
                                 </div>
                             ))}
                         </div>
@@ -125,7 +139,7 @@ const ProfilePage = ({ userId }: { userId: number }) => {
                 ) : <p className="empty-msg">Кошик порожній</p>}
             </section>
 
-            {backButton}
+            <BackButton />
         </div>
     );
 };

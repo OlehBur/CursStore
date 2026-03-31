@@ -9,7 +9,7 @@
 .user-icon { font-size: 80px; margin-bottom: 10px; }
 
 .profile-header {
-    background: #44663d;
+    background: #638a9d;
     padding: 30px;
     border-radius: 15px;
     margin-bottom: 30px;
@@ -65,7 +65,7 @@
 }
 
 .cart-summary {
-    background: #eef7ff;
+    background: #1c8944;
     display: inline-block;
     padding: 10px 20px;
     border-radius: 8px;

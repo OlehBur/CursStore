@@ -1,10 +1,9 @@
-import { useNavigate } from "react-router-dom"
 import SticksArena from "../components/SticksArena.tsx";
 import "./GamePage.css"
 import { useState } from "react";
+import BackButton from "../components/BackToMainButton.tsx";
 
 const TTT_Page = () => {
-    const navigate = useNavigate();
     const [score1, setScore1] = useState(0);
     const [score2, setScore2] = useState(0);
     const [isFirstPlayer, setIsFirstPlayer] = useState(true);
@@ -66,9 +65,7 @@ const TTT_Page = () => {
                 setScore2(newScore2);
                 setIsFirstPlayer(newIsFirstPlayer);
     }} */ />
-            <button onClick={() => navigate('/')} style={{ background: '#646cff' }}>
-                ← Повернутися на головну
-            </button>
+            <BackButton />
         </div>
     )
 }
