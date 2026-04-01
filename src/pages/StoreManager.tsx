@@ -11,6 +11,7 @@ type SM_prop = {
     storeId: number;
     itemPage_nav: string;
     TIMEOUT_DELAY: number;
+    SetProductId: (id: number) => void;
 }
 
 const StoreManager = (prop: SM_prop) => {
@@ -214,6 +215,7 @@ const StoreManager = (prop: SM_prop) => {
                             <div key={p.Id}
                                 onClick={() => {
                                     setSelectedProduct(p);
+                                    prop.SetProductId(p.Id);//for prod page
                                     navigate(prop.itemPage_nav);
                                 }}
                                 className="product-card">

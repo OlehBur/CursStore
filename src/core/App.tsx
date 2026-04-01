@@ -59,6 +59,7 @@ function App() {
             <MainStore
               OnLogout={() => setUserId(-1)}
               OnProductSelect={(id) => setProdId(id)}
+              OnStoreSelect={(id) => setStoreId(id)}
               TIMEOUT_DELAY={TIMEOUT_DELAY}
             /*auth_nav={auth_nav}*/ profile_nav={profile_nav} store_prof_nav={store_prof_nav} settings_nav={settings_nav} game_nav={game_nav} stores_nav={stores_nav} item_nav={product_nav} />
             {/* //   <h1>Ви успішно увійшли!</h1>
@@ -88,7 +89,8 @@ function App() {
             TIMEOUT_DELAY={TIMEOUT_DELAY}
             userId={userId}
             itemPage_nav={product_nav}
-            storeId={storeId} /> //fr prodPage - setScore dataid | from Parthnersgip - stor may be null
+            storeId={storeId}//fr prodPage - setScore dataid | from Parthnersgip - stor may be null
+            SetProductId={(id) => setProdId(id)} />
         } />
       <Route
         path="/stores_list"

@@ -112,6 +112,10 @@ const ProductPage = (prop: PP_prop) => {
                             <span className="store-name-mini">{localStoreInfo.Name}</span>
                         </div>
                     )}
+                    <div className="product-price-section">
+                        <span className="price-label">Ціна:</span>
+                        <span className="price-value">${product.Price}</span>
+                    </div>
                     <button className={`btn-action ${isInCart ? 'active' : ''}`} onClick={() => handleToggle('c')}>
                         {isInCart ? '❌ Видалити з кошика' : '🛒 Додати в кошик'}
                     </button>

@@ -41,9 +41,9 @@
     /* height: 180px; */
     height: 200px;
     background: #3d3d3d;                        /*MAIN L GRAY*/
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    /* display: flex; */
+    /* align-items: center; */
+    /* justify-content: center; */
     padding: 20px;
 }
 

@@ -11,9 +11,10 @@
 
 .product-title {
     text-align: center;
-    font-size: 32px;
+    font-size: 42px;
     margin-bottom: 30px;
     color: #ff3e3e;
+    text-shadow: #ffffff 1px 1px;
     text-transform: uppercase;
 }
 
@@ -33,7 +34,8 @@
 .aspect-ratio-box {
     position: relative;
     width: 100%;
-    padding-top: 56.25%; /* 16:9 Aspect Ratio */
+    padding-top: 56.25%;
+    /* 16:9 Aspect Ratio */
     background: #000;
     border-radius: 12px;
     overflow: hidden;
@@ -47,7 +49,8 @@
     /* width: 600px; */
     width: 100%;
     height: 100%;
-    object-fit: contain; /*insert photo insted cut*/
+    object-fit: contain;
+    /*insert photo insted cut*/
 }
 
 .action-sidebar {
@@ -55,6 +58,35 @@
     display: flex;
     flex-direction: column;
     gap: 15px;
+}
+
+.product-price-section {
+    background: #252525;
+    /* Темний фон як у картці */
+    padding: 20px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: 1px solid #333;
+    box-shadow: inset 0 0 10px  #696969;            /*dark inset sh*/
+}
+
+.price-label {
+    color: #888;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 5px;
+}
+
+.price-value {
+    color: #00ff7f;
+    /* Той самий зелений, що і в каталозі */
+    font-size: 32px;
+    font-weight: 900;
+    text-shadow: 0 0 15px rgba(0, 255, 127, 0.3);
 }
 
 .btn-action {
@@ -67,10 +99,16 @@
     transition: 0.3s;
     background: #333;
     color: white;
+    box-shadow: inset 0 0 10px rgba(255, 255, 255, 0.5);
 }
 
-.btn-action.active { background: #ff3e3e; }
-.btn-action:hover { transform: scale(1.02); }
+.btn-action.active {
+    background: #910000;
+}
+
+.btn-action:hover {
+    transform: scale(1.02);
+}
 
 .product-details {
     background: #222;
@@ -85,7 +123,8 @@
 }
 
 .specs-table th {
-    background: #ff3e3e;
+    background: #910000;
+    /*main red*/
     padding: 12px;
     text-align: left;
 }
@@ -95,7 +134,9 @@
     border-bottom: 1px solid #444;
 }
 
-.specs-table tr:hover { background: #2a2a2a; }
+.specs-table tr:hover {
+    background: #2a2a2a;
+}
 
 .store-info-badge {
     display: flex;
@@ -106,6 +147,7 @@
     border-radius: 10px;
     margin-bottom: 10px;
     border: 1px solid #444;
+    box-shadow: inset 0 0 10px  #696969;
 }
 
 .store-logo-mini {

@@ -6,7 +6,7 @@
     width: 100vh;
     height: 100vh;
     /* fullscr */
-    background-color: #1a1a1a;
+    /* background-color: #1a1a1a; */
     z-index: 1000;
     /* padding: 50px; */
 }

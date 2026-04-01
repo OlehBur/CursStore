@@ -24,7 +24,7 @@ type MS_prop = {
 
     OnLogout: () => void;
     OnProductSelect: (id: number) => void;
-    // OnStoreSelect: 
+    OnStoreSelect: (id: number) => void;
 }
 //  <button onClick={() => navigate('/auth')}>
 //           Авторизація
@@ -127,7 +127,9 @@ const MainStore = (prop: MS_prop) => {
                     <button>Обране</button>
                     <button>Кошик</button>
                     <button onClick={() => navigate(prop.game_nav)}>Гра</button>
-                    <button onClick={() => { navigate(prop.store_prof_nav); }}>Партнерство</button>
+                    <button onClick={() => {
+                        prop.OnStoreSelect(-1);
+                        navigate(prop.store_prof_nav); }}>Партнерство</button>
                     <button>FAQ</button>
                     <button>Контакти</button>
                     <button onClick={prop.OnLogout}>Вийти з Акаунту</button>
@@ -207,13 +209,24 @@ const MainStore = (prop: MS_prop) => {
                                 prop.OnProductSelect(p.Id);
                                 navigate(prop.item_nav);
                             }}>
+                                {/* <div className="img-container">
+                                    <img src={p.ImageUrl} alt={p.Name} onError={(e) => e.currentTarget.src = 'placeholder.jpg'} />
+                                </div>
+                                <div className="card-footer">
+                                    <h4 className='product-name'>{p.Name}</h4>
+                                    <span className="price">${p.Price}</span> */}
+                                {/* <button className="add-to-cart" onClick={(e) => { e.stopPropagation(); console.log('Add to cart', p.Id) }}>🛒</button> */}
+                                {/* </div> */}
                                 <div className="img-container">
                                     <img src={p.ImageUrl} alt={p.Name} onError={(e) => e.currentTarget.src = 'placeholder.jpg'} />
                                 </div>
-                                <h4>{p.Name}</h4>
-                                <div className="card-footer">
-                                    <span className="price">${p.Price}</span>
-                                    <button className="add-to-cart" onClick={(e) => { e.stopPropagation(); console.log('Add to cart', p.Id) }}>🛒</button>
+                                <div className="card-info-wrapper">
+                                    <div className="product-name-container">
+                                        <h4 className='product-name'>{p.Name}</h4>
+                                    </div>
+                                    <div className="price-container">
+                                        <span className="price">${p.Price}</span>
+                                    </div>
                                 </div>
                             </div>
                         ))}
