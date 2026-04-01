@@ -219,7 +219,7 @@ const StoreManager = (prop: SM_prop) => {
                                     navigate(prop.itemPage_nav);
                                 }}
                                 className="product-card">
-                                <img src={p.ImageUrl} alt={p.Name} className="card-product-img" />
+                                <img src={p?.ImageUrl} alt={p.Name} className="card-product-img" />
                                 <div className='card-content'>
                                     <h3>{p.Name}</h3>
                                     <span className="product-price">${p.Price}</span>

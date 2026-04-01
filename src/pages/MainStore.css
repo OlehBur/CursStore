@@ -16,7 +16,7 @@
 }
 
 .brand {
-    font-size: 26px;
+    font-size: 27px;
     font-weight: 800;
     color: #ff3e3e;
     letter-spacing: 1px;
@@ -44,7 +44,7 @@
 
 .filters-sidebar {
     width: 350px;
-    background: rgb(142, 138, 192);
+    background: #3d3d3d;
     padding: 25px;
     border-radius: 15px;
     box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
@@ -61,7 +61,7 @@
     display: block;
     margin-bottom: 10px;
     font-weight: 600;
-    color: #444;
+    color: #c7c7c7;
 }
 
 .filter-item input[type="range"] {
@@ -88,7 +88,7 @@
     flex: 1;
     padding: 15px 25px;
     border-radius: 30px 0 0 30px;
-    border: 2px solid #ddd;
+    border: 2px solid #ffffff;
     outline: none;
     font-size: 16px;
     height: 100%;
@@ -118,7 +118,7 @@
 }
 
 .sort-buttons button {
-    background: #5d7b8f;
+    background: #3d3d3d;
     border: none;
     padding: 8px 18px;
     margin-right: 10px;
@@ -128,7 +128,7 @@
 }
 
 .sort-buttons button.active {
-    background: #bb5858;
+    background:  #910000;
     color: white;
 }
 
@@ -258,10 +258,12 @@
 
 .pagination button {
     color: rgb(0, 0, 0);
+    background-color:#1a1a1a;
+    border: 1px solid #ffffff;
+    color: rgb(255, 255, 255);
 }
 
 .pagination button.active {
-    background: #ca6767;
-    color: rgb(255, 255, 255);
-    border-color: #000000;
+    background: #910000;    
+    /* border-color: #ff0000; */
 }
