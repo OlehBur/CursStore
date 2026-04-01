@@ -3,19 +3,22 @@ import './StoreManager.css';
 import ProductModal from '../components/ProductModal';
 import { useNavigate } from 'react-router-dom';
 import type { Product } from '../core/types/Product';
+import Loader from '../components/Loader';
 
 
 type SM_prop = {
     userId: number;
     storeId: number;
     itemPage_nav: string;
+    TIMEOUT_DELAY: number;
 }
 
 const StoreManager = (prop: SM_prop) => {
     const navigate = useNavigate();
     const [store, setStore] = useState<any>(null);
     const [products, setProducts] = useState<Product[]>([]);
-    const [loading, setLoading] = useState(true);
+    // const [loading, setLoading] = useState(true);
+    const [allowLoader, setAllowLoader] = useState(true);
 
     const isOwner = store && store.UserId === prop.userId;//is curr user Owner
 
@@ -43,7 +46,8 @@ const StoreManager = (prop: SM_prop) => {
     //     fetchStoreData();
     // }, [prop.userId, prop.storeId]);
     const loadData = async () => {
-        setLoading(true);
+        setAllowLoader(true);
+        // setLoading(true);
 
         // if storeId  != -1 -> get by ID. 
         // else -search user shop
@@ -71,7 +75,8 @@ const StoreManager = (prop: SM_prop) => {
         } catch (e) {
             console.error("Помилка завантаження:", e);
         } finally {
-            setLoading(false);
+            // setLoading(false);
+            setTimeout(() => setAllowLoader(false), prop.TIMEOUT_DELAY);
         }
     };
 
@@ -161,7 +166,10 @@ const StoreManager = (prop: SM_prop) => {
         setStoreModalOpen(false);
     };
 
-    if (loading) return <div className="loader">Завантаження...</div>;
+    if (allowLoader)//loading
+        return <Loader />;
+    //  <div className="loader">Завантаження...</div>;
+
     // console.log("Current store state:", store, "isOwner:", isOwner);
     return (
         <div className="store-container">
@@ -178,7 +186,7 @@ const StoreManager = (prop: SM_prop) => {
                         <div className="header-content">
                             <img src={store.LogoUrl} alt="Logo" className="store-logo-main" />
                             <div className="store-info">
-                                <h1>Профіль "{store.Name}"</h1>
+                                <h1>{isOwner ? "Профіль " : "Магазин "} "{store.Name}"</h1>
                                 <p>{store.Description}</p>
                                 {isOwner && (
                                     <button className="btn-edit-store" onClick={() => setStoreModalOpen(true)}>

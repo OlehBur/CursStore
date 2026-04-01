@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import './ProductPage.css';
 import BackButton from '../components/BackToMainButton';
 import { useNavigate } from 'react-router-dom';
+import Loader from '../components/Loader';
 
 
 type PP_prop = {
@@ -9,6 +10,7 @@ type PP_prop = {
     prodId: number;
     // storeData: any;
     store_prof_nav: string;
+    TIMEOUT_DELAY: number;
 
     SetStore: (id: number) => void;
 }
@@ -19,10 +21,12 @@ const ProductPage = (prop: PP_prop) => {
     const [isFavorite, setIsFavorite] = useState(false);
     // const [store, setStore] = useState<any>(null);
     const [localStoreInfo, setLocalStoreInfo] = useState<any>(null);
+    const [isAllowLoader, setAllowLoader] = useState(true);
     const navigate = useNavigate();
 
     useEffect(() => {
-        if (prop.prodId === -1) return;
+        if (prop.prodId === -1)
+            return;
 
         // load data & +1 to Popularity 
         fetch(`http://localhost:3001/api/products/${prop.prodId}`)
@@ -44,6 +48,8 @@ const ProductPage = (prop: PP_prop) => {
                 setIsInCart(status.inCart);
                 setIsFavorite(status.inFavorites);
             });
+
+        setTimeout(() => setAllowLoader(false), prop.TIMEOUT_DELAY);
     }, [prop.prodId, prop.userId]);
 
     const handleToggle = async (type: 'c' | 'f') => {
@@ -59,10 +65,11 @@ const ProductPage = (prop: PP_prop) => {
         else setIsFavorite(data.action === 'added');
     };
 
-    if (prop.prodId === -1 || !product)
+    if (/*prop.prodId === -1 || !product*/isAllowLoader)
         return <>
-            <div className="loader">Завантаження...</div>
-            <BackButton />
+            <Loader />
+            {/* <div className="loader">Завантаження...</div> */}
+            {/* <BackButton /> */}
         </>;
 
     // get video ID from yt
@@ -97,7 +104,7 @@ const ProductPage = (prop: PP_prop) => {
                 <div className="action-sidebar">
                     {localStoreInfo && (
                         <div className="store-info-badge" onClick={() => {
-                            console.log("Curr Store ID:", localStoreInfo.Id);
+                            // console.log("Curr Store ID:", localStoreInfo.Id);
                             prop.SetStore(localStoreInfo.Id);
                             navigate(prop.store_prof_nav);
                         }}>

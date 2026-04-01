@@ -14,6 +14,8 @@ import { useState } from 'react'
 import StoreManager from '../pages/StoreManager.tsx'
 import MainStore from '../pages/MainStore.tsx'
 import ProductPage from '../pages/ProductPage.tsx'
+import StoresList from '../pages/StoresList.tsx'
+// import Loader from '../components/Loader.tsx'
 
 function App() {
   const [userId, setUserId] = useState<number>(-1);
@@ -23,8 +25,13 @@ function App() {
   const profile_nav = '/profile';
   const product_nav = '/product';
   const store_prof_nav = '/store_profile';
+  const stores_nav = "/stores_list";
   const settings_nav = '/settings';
   const game_nav = '/game';
+
+  const TIMEOUT_DELAY = 400;
+
+  // return <Loader />;
 
   return (
     <Routes>
@@ -52,27 +59,46 @@ function App() {
             <MainStore
               OnLogout={() => setUserId(-1)}
               OnProductSelect={(id) => setProdId(id)}
-            /*auth_nav={auth_nav}*/ profile_nav={profile_nav} store_prof_nav={store_prof_nav} settings_nav={settings_nav} game_nav={game_nav} stores_nav='' item_nav={product_nav} />
-          //   <h1>Ви успішно увійшли!</h1>
+              TIMEOUT_DELAY={TIMEOUT_DELAY}
+            /*auth_nav={auth_nav}*/ profile_nav={profile_nav} store_prof_nav={store_prof_nav} settings_nav={settings_nav} game_nav={game_nav} stores_nav={stores_nav} item_nav={product_nav} />
+            {/* //   <h1>Ви успішно увійшли!</h1>
           //   <p>Ваш ID користувача в базі: <strong>{userId}</strong></p>
-            <button onClick={() => setUserId(-1)}>Вийти</button>
+            <button onClick={() => setUserId(-1)}>Вийти</button> */}
           </div>
         )}
       </>} />
       {/* <Route path="/auth" element={<AuthPopup />} /> */}
-      <Route path={product_nav} element={<ProductPage userId={userId} prodId={prodId} store_prof_nav={store_prof_nav} SetStore={(id) => setStoreId(id)} /*storeData={storeId}*/ />} />
-      <Route path={profile_nav} element={<ProfilePage userId={userId}
-        itemPageNav={product_nav}
-        OnProductSelect={(id) => setProdId(id)} />} />
+      <Route path={product_nav}
+        element={
+          <ProductPage
+            TIMEOUT_DELAY={TIMEOUT_DELAY}
+            userId={userId} prodId={prodId} store_prof_nav={store_prof_nav}
+            SetStore={(id) => setStoreId(id)} /*storeData={storeId}*/ />} />
+      <Route path={profile_nav}
+        element={<ProfilePage
+          TIMEOUT_DELAY={TIMEOUT_DELAY}
+          userId={userId}
+          itemPageNav={product_nav}
+          OnProductSelect={(id) => setProdId(id)} />} />
       {/* <Route path={store_prof_nav} element={<StoreManager userId={userId} itemPage_nav={product_nav} storeId={store} />} /> */}
       <Route
         path={store_prof_nav}
         element={
           <StoreManager
+            TIMEOUT_DELAY={TIMEOUT_DELAY}
             userId={userId}
             itemPage_nav={product_nav}
             storeId={storeId} /> //fr prodPage - setScore dataid | from Parthnersgip - stor may be null
         } />
+      <Route
+        path="/stores_list"
+        element={
+          <StoresList
+            setStore={setStoreId}
+            storeProfNav={store_prof_nav}
+          />
+        }
+      />
       <Route path={settings_nav} element={<SettingsPage />} />
       <Route path={game_nav} element={<GamePage />} />
 

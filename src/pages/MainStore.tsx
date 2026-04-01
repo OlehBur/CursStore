@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import './MainStore.css';
 import type { Product } from '../core/types/Product';
 import { useNavigate } from 'react-router-dom';
+import Loader from '../components/Loader';
 
 interface Limits {
     maxPrice: number;
@@ -19,6 +20,7 @@ type MS_prop = {
     settings_nav: string;
     game_nav: string;
     item_nav: string;
+    TIMEOUT_DELAY: number;
 
     OnLogout: () => void;
     OnProductSelect: (id: number) => void;
@@ -45,6 +47,8 @@ const MainStore = (prop: MS_prop) => {
     const [totalPages, setTotalPages] = useState(1);
     // const [viewedProduct, setViewedProucts] = useState(0);
     const [limits, setLimits] = useState<Limits | null>(null);
+    const [loaderAllow, setLoaderAllow] = useState<boolean>(true);
+    // const TIMEOUT_DELAY = 1000;
     const navigate = useNavigate()
 
     const [filters, setFilters] = useState({
@@ -75,7 +79,12 @@ const MainStore = (prop: MS_prop) => {
     }, []);
 
     useEffect(() => {// load if any filters changed
-        if (limits) fetchProducts();
+        if (limits) {
+            fetchProducts();
+            setTimeout(() => setLoaderAllow(false), prop.TIMEOUT_DELAY);
+        }
+        // else
+        //     setLoaderAllow(true);
     }, [filters, search]);
 
     const fetchProducts = async () => {
@@ -103,7 +112,8 @@ const MainStore = (prop: MS_prop) => {
         // setViewedProucts(data.total.length);
     };
 
-    if (!limits) return <div className="loader">Завантаження бази даних...</div>;
+    if (loaderAllow)
+        return <Loader />;
 
     return (
         <div className="main-layout">
@@ -131,31 +141,31 @@ const MainStore = (prop: MS_prop) => {
 
                     <div className="filter-item">
                         <label>Ціна: ${filters.price[0]} — ${filters.price[1]}</label>
-                        <input type="range" min="0" max={limits.maxPrice} value={filters.price[1]}
+                        <input type="range" min="0" max={limits?.maxPrice} value={filters.price[1]}
                             onChange={e => setFilters({ ...filters, price: [filters.price[0], Number(e.target.value)], page: 1 })} />
                     </div>
 
                     <div className="filter-item">
                         <label>Кубатура: {filters.cc[0]} — {filters.cc[1]} CC</label>
-                        <input type="range" min="0" max={limits.maxCC} value={filters.cc[1]}
+                        <input type="range" min="0" max={limits?.maxCC} value={filters.cc[1]}
                             onChange={e => setFilters({ ...filters, cc: [filters.cc[0], Number(e.target.value)], page: 1 })} />
                     </div>
 
                     <div className="filter-item">
                         <label>Вага: {filters.weight[0]} — {filters.weight[1]} кг</label>
-                        <input type="range" min="0" max={limits.maxWeight} value={filters.weight[1]}
+                        <input type="range" min="0" max={limits?.maxWeight} value={filters.weight[1]}
                             onChange={e => setFilters({ ...filters, weight: [filters.weight[0], Number(e.target.value)], page: 1 })} />
                     </div>
 
                     <div className="filter-item">
                         <label>Потужність (HP): {filters.hp[0]} — {filters.hp[1]}</label>
-                        <input type="range" min="0" max={limits.maxHP} value={filters.hp[1]}
+                        <input type="range" min="0" max={limits?.maxHP} value={filters.hp[1]}
                             onChange={e => setFilters({ ...filters, hp: [filters.hp[0], Number(e.target.value)], page: 1 })} />
                     </div>
 
                     <div className="filter-item">
                         <label>Крутний момент (NM): {filters.nm[0]} — {filters.nm[1]}</label>
-                        <input type="range" min="0" max={limits.maxNM} value={filters.nm[1]}
+                        <input type="range" min="0" max={limits?.maxNM} value={filters.nm[1]}
                             onChange={e => setFilters({ ...filters, nm: [filters.nm[0], Number(e.target.value)], page: 1 })} />
                     </div>
                 </aside>

@@ -1,0 +1,11 @@
+.back-button {
+     background: #1a1a1a;                /*MAIN D GRAY*/
+    border: 1px solid #ff7b00;
+    margin: 50px
+}
+
+.back-button:hover {
+     border: 1px solid #ffffff;                  /*MAIN WHITE*/
+    background: #d6d6d6;                        /*MAIN SL GRAY*/
+    color: #000;
+}

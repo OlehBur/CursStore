@@ -1,13 +1,10 @@
 import { useNavigate } from "react-router-dom";
-
+import "./BackToMainButton.css";
 
 const BackButton = () => {
     const navigate = useNavigate()
 
-    return <button style={{
-        backgroundColor: "gray",
-        margin: "20px"
-    }} onClick={() => navigate('/')}>
+    return <button className="back-button" onClick={() => navigate('/')}>
         ← Повернутися на головну
     </button >;
 }

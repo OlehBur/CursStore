@@ -273,6 +273,20 @@ app.get('/api/store/short-details/:shopId', (req, res) => {
     });
 });
 
+app.get('/api/stores/all', (req, res) => {
+    //get prod cnt fr p.Id for every store by s.Id
+    const sql = `
+        SELECT s.Id, s.Name, s.LogoUrl, COUNT(p.Id) as ProductCount
+        FROM Stores s
+        LEFT JOIN Products p ON s.Id = p.ShopId
+        GROUP BY s.Id
+    `;
+    db.query(sql, (err, results) => {
+        if (err) return res.status(500).json({ error: err.message });
+        res.json(results);
+    });
+});
+
 app.post('/api/product/save', (req, res) => {// add/edit prod (universal)
     const { id, Name, Description, Price, ImageUrl, VideoUrl, CC, Weight, HP, NM, shopId } = req.body;
 

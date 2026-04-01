@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import type { Product } from "../core/types/Product";
 import BackButton from "../components/BackToMainButton";
 import { useNavigate } from "react-router-dom";
+import Loader from "../components/Loader";
 
 interface UserInfo {
     Name: string;
@@ -12,6 +13,7 @@ interface UserInfo {
 type PP_prop = {
     userId: number;
     itemPageNav: string;
+    TIMEOUT_DELAY: number;
 
     OnProductSelect: (id: number) => void;
 }
@@ -24,6 +26,7 @@ const ProfilePage = (prop: PP_prop) => {
 
     const [favPage, setFavPage] = useState(1);
     const [cartPage, setCartPage] = useState(1);
+    const [isAllowLoader, setAllowLoader] = useState(true);
     const itemsPerPage = 5;
 
     useEffect(() => {
@@ -43,12 +46,14 @@ const ProfilePage = (prop: PP_prop) => {
         };
 
         fetchProfileData();
+        setTimeout(()=> setAllowLoader(false), prop.TIMEOUT_DELAY);
     }, [prop.userId]);
 
-    if (prop.userId === -1)
-        return <div className="profile-container"><h1>Будь ласка, авторизуйтесь</h1>
-            <BackButton />
-        </div>;
+    if (/*prop.userId === -1*/isAllowLoader)
+        return <Loader />
+    // return <div className="profile-container"><h1>Будь ласка, авторизуйтесь</h1>
+    //     <BackButton />
+    // </div>;
 
     // Summ
     const totalAmount = cart.reduce((sum, item) => sum + Number(item.Price) * (item.Quantity || 1), 0);
@@ -70,7 +75,8 @@ const ProfilePage = (prop: PP_prop) => {
         return (
             <div className="pagination">
                 {pageNumbers.map(num => (
-                    <button key={num} className={num === currentPage ? "active" : ""} onClick={() => setPage(num)}>
+                    <button key={num} className={num === currentPage ? "active" : ""}
+                        onClick={() => setPage(num)}>
                         {num}
                     </button>
                 ))}

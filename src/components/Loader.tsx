@@ -1,0 +1,36 @@
+import React from 'react';
+import './Loader.css';
+
+import fTireImg from '../assets/fr_tire_logo.png'; 
+import rTireImg from '../assets/rr_tire_logo.png'; 
+import motorcycleImg from '../assets/moto_base_logo.png'; 
+
+const Loader: React.FC = () => {
+    return (
+        <div className="gear-loader-container">
+            <h2 className="loader-brand">HUM ENGINE</h2>
+
+            <div className="engine-block">
+                <img
+                    src={fTireImg}
+                    alt="front-wheel"
+                    className="logo-part front-wheel"
+                />
+                <img
+                    src={rTireImg}
+                    alt="rear-wheel"
+                    className="logo-part rear-wheel"
+                />
+                <img
+                    src={motorcycleImg}
+                    alt="motorcycle"
+                    className="logo-part motorcycle"
+                />
+            </div>
+
+            <p className="loader-text">Завантаження...</p>
+        </div>
+    );
+};
+
+export default Loader;
