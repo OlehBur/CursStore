@@ -18,7 +18,7 @@ import ProductPage from '../pages/ProductPage.tsx'
 function App() {
   const [userId, setUserId] = useState<number>(-1);
   const [prodId, setProdId] = useState<number>(-1);
-  const [store, setStore] = useState<any>(null);
+  const [storeId, setStoreId] = useState<number>(-1);//selectedStoreId
   // const auth_nav = '/auth';
   const profile_nav = '/profile';
   const product_nav = '/product';
@@ -60,11 +60,19 @@ function App() {
         )}
       </>} />
       {/* <Route path="/auth" element={<AuthPopup />} /> */}
-      <Route path={product_nav} element={<ProductPage userId={userId} prodId={prodId} store_prof_nav={store_prof_nav} SetStore={(data) => setStore(data)} storeData={store}/>} />
+      <Route path={product_nav} element={<ProductPage userId={userId} prodId={prodId} store_prof_nav={store_prof_nav} SetStore={(id) => setStoreId(id)} /*storeData={storeId}*/ />} />
       <Route path={profile_nav} element={<ProfilePage userId={userId}
         itemPageNav={product_nav}
         OnProductSelect={(id) => setProdId(id)} />} />
-      <Route path={store_prof_nav} element={<StoreManager userId={userId} itemPage_nav={product_nav} />} />
+      {/* <Route path={store_prof_nav} element={<StoreManager userId={userId} itemPage_nav={product_nav} storeId={store} />} /> */}
+      <Route
+        path={store_prof_nav}
+        element={
+          <StoreManager
+            userId={userId}
+            itemPage_nav={product_nav}
+            storeId={storeId} /> //fr prodPage - setScore dataid | from Parthnersgip - stor may be null
+        } />
       <Route path={settings_nav} element={<SettingsPage />} />
       <Route path={game_nav} element={<GamePage />} />
 

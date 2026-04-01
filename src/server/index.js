@@ -265,7 +265,7 @@ app.get('/api/store/:shopId/products', (req, res) => {//get prod fr exact shop
 
 app.get('/api/store/short-details/:shopId', (req, res) => {
     const shopId = req.params.shopId;
-    const sql = "SELECT Name, LogoUrl FROM Stores WHERE Id = ?";
+    const sql = "SELECT Id, Name, LogoUrl FROM Stores WHERE Id = ?";
     db.query(sql, [shopId], (err, results) => {
         if (err) return res.status(500).json({ error: err.message });
         if (results.length === 0) return res.status(404).json({ error: "Магазин не знайдено" });

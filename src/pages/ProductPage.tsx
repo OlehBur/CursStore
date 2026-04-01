@@ -7,10 +7,10 @@ import { useNavigate } from 'react-router-dom';
 type PP_prop = {
     userId: number;
     prodId: number;
-    storeData: any;
+    // storeData: any;
     store_prof_nav: string;
 
-    SetStore: (data: any) => void;
+    SetStore: (id: number) => void;
 }
 
 const ProductPage = (prop: PP_prop) => {
@@ -18,6 +18,7 @@ const ProductPage = (prop: PP_prop) => {
     const [isInCart, setIsInCart] = useState(false);
     const [isFavorite, setIsFavorite] = useState(false);
     // const [store, setStore] = useState<any>(null);
+    const [localStoreInfo, setLocalStoreInfo] = useState<any>(null);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -31,7 +32,8 @@ const ProductPage = (prop: PP_prop) => {
                 if (data.ShopId) {
                     fetch(`http://localhost:3001/api/store/short-details/${data.ShopId}`)
                         .then(res => res.json())
-                        .then(storeData => prop.SetStore(storeData));
+                        // .then(storeData => prop.SetStore(storeData));
+                        .then(storeData => { setLocalStoreInfo(storeData); });
                 }
             });
 
@@ -93,13 +95,14 @@ const ProductPage = (prop: PP_prop) => {
                 </div>
 
                 <div className="action-sidebar">
-                    {prop.storeData && (
+                    {localStoreInfo && (
                         <div className="store-info-badge" onClick={() => {
-                            prop.SetStore(prop.storeData.Id);
+                            console.log("Curr Store ID:", localStoreInfo.Id);
+                            prop.SetStore(localStoreInfo.Id);
                             navigate(prop.store_prof_nav);
                         }}>
-                            <img src={prop.storeData.LogoUrl || 'default-store.png'} alt="Store Logo" className="store-logo-mini" />
-                            <span className="store-name-mini">{prop.storeData.Name}</span>
+                            <img src={localStoreInfo.LogoUrl || 'default-store.png'} alt="Store Logo" className="store-logo-mini" />
+                            <span className="store-name-mini">{localStoreInfo.Name}</span>
                         </div>
                     )}
                     <button className={`btn-action ${isInCart ? 'active' : ''}`} onClick={() => handleToggle('c')}>

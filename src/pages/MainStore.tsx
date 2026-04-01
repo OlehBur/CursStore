@@ -22,6 +22,7 @@ type MS_prop = {
 
     OnLogout: () => void;
     OnProductSelect: (id: number) => void;
+    // OnStoreSelect: 
 }
 //  <button onClick={() => navigate('/auth')}>
 //           Авторизація
@@ -116,7 +117,7 @@ const MainStore = (prop: MS_prop) => {
                     <button>Обране</button>
                     <button>Кошик</button>
                     <button onClick={() => navigate(prop.game_nav)}>Гра</button>
-                    <button onClick={() => navigate(prop.store_prof_nav)}>Партнерство</button>
+                    <button onClick={() => { navigate(prop.store_prof_nav); }}>Партнерство</button>
                     <button>FAQ</button>
                     <button>Контакти</button>
                     <button onClick={prop.OnLogout}>Вийти з Акаунту</button>

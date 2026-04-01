@@ -18,7 +18,7 @@ const StoreManager = (prop: SM_prop) => {
     const [loading, setLoading] = useState(true);
 
     const isOwner = store && store.UserId === prop.userId;//is curr user Owner
-    
+
     // modals
     const [isStoreModalOpen, setStoreModalOpen] = useState(false);
     const [isProductModalOpen, setProductModalOpen] = useState(false);
@@ -26,14 +26,37 @@ const StoreManager = (prop: SM_prop) => {
 
     const [storeForm, setStoreForm] = useState({ Name: '', Description: '', LogoUrl: '' });
 
-    useEffect(() => {
-        fetchStoreData();
-    }, [userId]);
+    // useEffect(() => {
+    //     // if storeId not ex, get sh by user 
+    //     const fetchUrl = prop.storeId
+    //         ? `http://localhost:3001/api/store/details/${prop.storeId}`
+    //         : `http://localhost:3001/api/store/${prop.userId}`;
 
-    const fetchStoreData = async () => {
+    //     const fetchStoreData = async () => {
+    //         const res = await fetch(fetchUrl);
+    //         const data = await res.json();
+    //         if (data.exists) {
+    //             setStore(data.store);
+    //             fetchProducts(data.store.Id);
+    //         }
+    //     };
+    //     fetchStoreData();
+    // }, [prop.userId, prop.storeId]);
+    const loadData = async () => {
+        setLoading(true);
+
+        // if storeId  != -1 -> get by ID. 
+        // else -search user shop
+        const hasValidStoreId = typeof prop.storeId === 'number' && prop.storeId > 0;
+        const fetchUrl = hasValidStoreId ?//(prop.storeId !== -1)
+            `http://localhost:3001/api/store/details/${prop.storeId}`
+            : `http://localhost:3001/api/store/${prop.userId}`;
+        // console.log("Fetching store from:", fetchUrl); 
+
         try {
-            const res = await fetch(`http://localhost:3001/api/store/${userId}`);
+            const res = await fetch(fetchUrl);
             const data = await res.json();
+
             if (data.exists) {
                 setStore(data.store);
                 setStoreForm({
@@ -42,10 +65,69 @@ const StoreManager = (prop: SM_prop) => {
                     LogoUrl: data.store.LogoUrl
                 });
                 fetchProducts(data.store.Id);
+            } else {
+                setStore(null);
             }
-        } catch (e) { console.error(e); }
-        setLoading(false);
+        } catch (e) {
+            console.error("Помилка завантаження:", e);
+        } finally {
+            setLoading(false);
+        }
     };
+
+    // Викликаємо при монтуванні або зміні ID
+    useEffect(() => {
+        loadData();
+    }, [prop.storeId, prop.userId]);
+    // useEffect(() => {
+    //     const loadData = async () => {
+    //         setLoading(true);
+    //         //get URL by ID store or userId (if own)
+    //         const fetchUrl = prop.storeId
+    //             ? `http://localhost:3001/api/store/details/${prop.storeId}`
+    //             : `http://localhost:3001/api/store/${prop.userId}`;
+
+    //         try {
+    //             const res = await fetch(fetchUrl);
+    //             const data = await res.json();
+
+    //             if (data.exists) {
+    //                 setStore(data.store);
+    //                 setStoreForm({
+    //                     Name: data.store.Name,
+    //                     Description: data.store.Description,
+    //                     LogoUrl: data.store.LogoUrl
+    //                 });
+    //                 fetchProducts(data.store.Id);
+    //             } else {
+    //                 setStore(null); // store doenst exist yet
+    //             }
+    //         } catch (e) {
+    //             console.error("Помилка завантаження магазину:", e);
+    //         } finally {
+    //             setLoading(false);
+    //         }
+    //     };
+
+    //     loadData();
+    // }, [prop.userId, prop.storeId]);
+
+    // const fetchStoreData = async () => {
+    //     try {
+    //         const res = await fetch(`http://localhost:3001/api/store/${prop.userId}`);
+    //         const data = await res.json();
+    //         if (data.exists) {
+    //             setStore(data.store);
+    //             setStoreForm({
+    //                 Name: data.store.Name,
+    //                 Description: data.store.Description,
+    //                 LogoUrl: data.store.LogoUrl
+    //             });
+    //             fetchProducts(data.store.Id);
+    //         }
+    //     } catch (e) { console.error(e); }
+    //     setLoading(false);
+    // };
 
     const fetchProducts = async (shopId: number) => {
         const res = await fetch(`http://localhost:3001/api/store/${shopId}/products`);
@@ -53,6 +135,18 @@ const StoreManager = (prop: SM_prop) => {
         setProducts(data);
     };
 
+    // const handleStoreSubmit = async () => {
+    //     const method = store ? 'PUT' : 'POST';
+    //     const url = store ? `http://localhost:3001/api/store/${store.Id}` : `http://localhost:3001/api/store`;
+
+    //     await fetch(url, {
+    //         method,
+    //         headers: { 'Content-Type': 'application/json' },
+    //         body: JSON.stringify({ ...storeForm, userId: prop.userId })
+    //     });
+    //     fetchStoreData();
+    //     setStoreModalOpen(false);
+    // };
     const handleStoreSubmit = async () => {
         const method = store ? 'PUT' : 'POST';
         const url = store ? `http://localhost:3001/api/store/${store.Id}` : `http://localhost:3001/api/store`;
@@ -60,14 +154,15 @@ const StoreManager = (prop: SM_prop) => {
         await fetch(url, {
             method,
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ ...storeForm, userId })
+            body: JSON.stringify({ ...storeForm, userId: prop.userId })
         });
-        fetchStoreData();
+
+        loadData(); //!
         setStoreModalOpen(false);
     };
 
     if (loading) return <div className="loader">Завантаження...</div>;
-
+    // console.log("Current store state:", store, "isOwner:", isOwner);
     return (
         <div className="store-container">
             {!store ? (
@@ -85,16 +180,18 @@ const StoreManager = (prop: SM_prop) => {
                             <div className="store-info">
                                 <h1>Профіль "{store.Name}"</h1>
                                 <p>{store.Description}</p>
-                                <button className="btn-edit-store" onClick={() => setStoreModalOpen(true)}>
-                                    Редагувати дані
-                                </button>
+                                {isOwner && (
+                                    <button className="btn-edit-store" onClick={() => setStoreModalOpen(true)}>
+                                        Редагувати дані
+                                    </button>)
+                                }
                             </div>
                         </div>
                     </header>
 
                     <div className="store-products-grid">
                         {/* add new prod block*/}
-                        <div className="product-card add-new" onClick={() => {
+                        {isOwner && (<div className="product-card add-new" onClick={() => {
                             setSelectedProduct(null);
                             setProductModalOpen(true);
                         }}>
@@ -102,27 +199,28 @@ const StoreManager = (prop: SM_prop) => {
                                 <span className="plus-icon">+</span>
                                 <p>Додати продукт</p>
                             </div>
-                        </div>
+                        </div>)}
 
                         {/* prods blocks */}
                         {products.map((p) => (
                             <div key={p.Id}
                                 onClick={() => {
                                     setSelectedProduct(p);
-                                    navigate(itemPage_nav);
+                                    navigate(prop.itemPage_nav);
                                 }}
                                 className="product-card">
                                 <img src={p.ImageUrl} alt={p.Name} className="card-product-img" />
                                 <div className='card-content'>
                                     <h3>{p.Name}</h3>
                                     <span className="product-price">${p.Price}</span>
-                                    <button className="btn-edit-prod" onClick={(е) => {
-                                        е.stopPropagation(); // ban parent events
-                                        setSelectedProduct(p);
-                                        setProductModalOpen(true);
-                                    }}>
-                                        Редагувати
-                                    </button>
+                                    {isOwner && (
+                                        <button className="btn-edit-prod" onClick={(е) => {
+                                            е.stopPropagation(); // ban parent events
+                                            setSelectedProduct(p);
+                                            setProductModalOpen(true);
+                                        }}>
+                                            Редагувати
+                                        </button>)}
                                 </div>
                             </div>
                         ))}
