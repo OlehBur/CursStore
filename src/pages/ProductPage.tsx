@@ -110,7 +110,7 @@ const ProductPage = (prop: PP_prop) => {
                             <iframe
                                 className="media-content"
                                 src={formatVideoUrl(product.VideoUrl)}//'https://youtu.be/TVjAF7tvGdk?si=K3dfojJNZXfIa1aM'}//`https://www.youtube.com/embed/${getYouTubeId(product.VideoUrl)}`
-                                // title="YouTube video"
+                                title='Video Preview'// title="YouTube video"
                                 style={{ border: "none" }}
                                 allowFullScreen
                             ></iframe>

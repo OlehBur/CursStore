@@ -87,24 +87,34 @@ function decrypt(hash) {
     }
 }
 
-app.get('/api/products/limits', (req, res) => {
+app.get('/api/products/limits', (req, res) => {// get max \min values for filters
+    // const sql = `
+    //     SELECT 
+    //         MAX(Price) as maxPrice, 
+    //         MAX(CC) as maxCC, 
+    //         MAX(Weight) as maxWeight, 
+    //         MAX(HP) as maxHP, 
+    //         MAX(NM) as maxNM 
+    //     FROM Products`;
     const sql = `
         SELECT 
-            MAX(Price) as maxPrice, 
-            MAX(CC) as maxCC, 
-            MAX(Weight) as maxWeight, 
-            MAX(HP) as maxHP, 
-            MAX(NM) as maxNM 
+            MIN(Price) as minPrice, MAX(Price) as maxPrice, 
+            MIN(CC) as minCC, MAX(CC) as maxCC, 
+            MIN(Weight) as minWeight, MAX(Weight) as maxWeight, 
+            MIN(HP) as minHP, MAX(HP) as maxHP, 
+            MIN(NM) as minNM, MAX(NM) as maxNM 
         FROM Products`;
     db.query(sql, (err, results) => {
-        if (err) return res.status(500).json({ error: err.message });
+        if (err)
+            return res.status(500).json({ error: err.message });
         res.json(results[0]);
     });
 });
 
+
 app.get('/api/products/search', (req, res) => {
     let {
-        q = '',
+        q = '',//all prods
         sortBy = 'Popularity',
         order = 'DESC',
         page = 1,
@@ -132,18 +142,20 @@ app.get('/api/products/search', (req, res) => {
     addRangeFilter('HP', minHP, maxHP);
     addRangeFilter('NM', minNM, maxNM);
 
-    const allowedSort = ['Popularity', 'Price', 'Name'];//avoidance SQL injection)
+    ////
+    const allowedSort = ['Popularity', 'Price', 'Name'];//avoidance SQL injection) 
     if (!allowedSort.includes(sortBy)) sortBy = 'Popularity';
     sql += ` ORDER BY ${sortBy} ${order === 'ASC' ? 'ASC' : 'DESC'}`;
 
     sql += ` LIMIT ? OFFSET ?`;// separate viewed items 
     params.push(limit, offset);
 
+    ////
     db.query(sql, params, (err, results) => {
-        if (err) return res.status(500).json({ error: err.message });
+        if (err)
+            return res.status(500).json({ error: err.message });
 
         // const totalPages = Math.ceil(results[0].total / limit);
-
         db.query("SELECT COUNT(*) as total FROM Products WHERE Name LIKE ?", [`%${q}%`], (err, countRes) => {//main qnt for separate
             res.json({
                 products: results,

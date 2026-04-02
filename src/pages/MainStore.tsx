@@ -4,12 +4,15 @@ import type { Product } from '../core/types/Product';
 import { useNavigate } from 'react-router-dom';
 import Loader from '../components/Loader';
 
+import Slider from 'rc-slider';
+import 'rc-slider/assets/index.css';
+
 interface Limits {
-    maxPrice: number;
-    maxCC: number;
-    maxWeight: number;
-    maxHP: number;
-    maxNM: number;
+    minPrice: number; maxPrice: number;
+    minCC: number; maxCC: number;
+    minWeight: number; maxWeight: number;
+    minHP: number; maxHP: number;
+    minNM: number; maxNM: number;
 }
 
 type MS_prop = {
@@ -45,6 +48,7 @@ type MS_prop = {
 //   Tic Tac Toe
 
 const MainStore = (prop: MS_prop) => {
+    const FILTERS_APPLY_DELAY = 300;
     const [products, setProducts] = useState<Product[]>([]);
     const [totalPages, setTotalPages] = useState(1);
     // const [viewedProduct, setViewedProucts] = useState(0);
@@ -54,16 +58,18 @@ const MainStore = (prop: MS_prop) => {
     const navigate = useNavigate()
 
     const savedFilters = sessionStorage.getItem('store_filters');
-    const initialFilters = savedFilters ? JSON.parse(savedFilters) : {
-        sortBy: 'Popularity',
-        order: 'DESC' as 'ASC' | 'DESC',
-        page: 1,
-        price: [0, 0],// !!! 0 limits not loaded yet
-        cc: [0, 0],
-        weight: [0, 0],
-        hp: [0, 0],
-        nm: [0, 0]
-    };
+    const initialFilters = savedFilters ?
+        JSON.parse(savedFilters)
+        : {
+            sortBy: 'Popularity',
+            order: 'DESC' as 'ASC' | 'DESC',
+            page: 1,
+            price: [0, 0],// !!! 0 limits not loaded yet
+            cc: [0, 0],         //      //100 for avoid crash if limits not loaded yet
+            weight: [0, 0],
+            hp: [0, 0],
+            nm: [0, 0]
+        };
 
     // const [filters, setFilters] = useState({
     //     sortBy: 'Popularity',
@@ -77,7 +83,8 @@ const MainStore = (prop: MS_prop) => {
     // });
     const [filters, setFilters] = useState(() => {
         const saved = sessionStorage.getItem('store_filters');
-        if (saved) return JSON.parse(saved);
+        if (saved)
+            return JSON.parse(saved);
 
         return initialFilters;
     });
@@ -91,14 +98,15 @@ const MainStore = (prop: MS_prop) => {
                 setLimits(data);
 
                 setFilters((prev: typeof filters): typeof filters => { // upd only if filters are default (price[1] === 0)
-                    if (prev.price[1] !== 0) return prev; // otherwise
+                    if (prev.price[1] !== 0)
+                        return prev; // otherwise
                     return {
                         ...prev,
-                        price: [0, data.maxPrice],
-                        cc: [0, data.maxCC],
-                        weight: [0, data.maxWeight],
-                        hp: [0, data.maxHP],
-                        nm: [0, data.maxNM]
+                        price: [data.minPrice, data.maxPrice],
+                        cc: [data.minCC, data.maxCC],
+                        weight: [data.minWeight, data.maxWeight],
+                        hp: [data.minHP, data.maxHP],
+                        nm: [data.minNM, data.maxNM]
                     };
                 });
             })
@@ -119,25 +127,30 @@ const MainStore = (prop: MS_prop) => {
     //     // else
     //     //     setLoaderAllow(true);
     // }, [filters, search]);
-    useEffect(() => {
+
+    useEffect(() => {// load if any filters changed
         if (!limits)
             return;
 
-        const loadData = async () => {
-            try {
-                await fetchProducts();
+        const delayFetchDeag = setTimeout(() => {
+            const loadData = async () => {
+                try {
+                    await fetchProducts();
 
-                // save Filters
-                sessionStorage.setItem('store_filters', JSON.stringify(filters));
-                sessionStorage.setItem('store_search', search);
-            } catch (e) {
-                console.error("Failed to fetch products", e);
-            } finally {
-                setTimeout(() => setLoaderAllow(false), prop.TIMEOUT_DELAY);
-            }
-        };
+                    // save Filters
+                    // setTimeout(()=>{
+                    sessionStorage.setItem('store_filters', JSON.stringify(filters));
+                    sessionStorage.setItem('store_search', search);
+                } catch (e) {
+                    console.error("Failed to fetch products", e);
+                } finally {
+                    setTimeout(() => setLoaderAllow(false), prop.TIMEOUT_DELAY);
+                }
+            };
+            loadData();
+        }, FILTERS_APPLY_DELAY);
 
-        loadData();
+        return () => clearTimeout(delayFetchDeag);
     }, [filters, search, limits]);
 
     const fetchProducts = async () => {
@@ -171,6 +184,102 @@ const MainStore = (prop: MS_prop) => {
         window.location.reload();
     };
 
+    //double range slider component
+    const RangeFilterItem = ({ title, field, min, max, unit }: any) => {
+        const [displayValues, setDisplayValues] = useState([//hot prev val
+            Number(filters[field][0]) || Number(min),
+            Number(filters[field][1]) || Number(max)
+        ]);
+
+        if (min === undefined || max === undefined)
+            return null;
+
+        return <div className="filter-item">
+            <label className="filter-label">
+                <span>{title}</span>
+                <span className="filter-values">
+                    {/* {unit === '$' ? `$${filters[field][0]}` : filters[field][0]} — {unit === '$' ? `$${filters[field][1]}` : filters[field][1]} {unit !== '$' && unit} */}
+
+                    {/* {displayValues[0]} — {displayValues[1]} */}
+
+                    {/* {unit === '$' ? `$${displayValues[0]}` : displayValues[0]} —{unit === '$' ? `$${displayValues[1]}` : displayValues[1]} {unit !== '$' && unit} */}
+
+                    {`${displayValues[0]} — ${displayValues[1]} ${unit}`}
+                </span>
+            </label>
+            <div className="slider-wrapper">
+                <Slider
+                    range
+                    min={Number(min)}
+                    max={Number(max)}
+                    //  defaultValue ins value, so tha React doesnt cont mili change
+                    defaultValue={[Number(filters[field][0]), Number(filters[field][1])]}
+                    // value={displayValues}
+                    onChange={(val: any) => {
+                        setDisplayValues(val);
+                    }}
+                    onChangeComplete/*onAfterChange */={(val: any) => {  // onAfterChange exc onl aft releas
+                        setFilters({ ...filters, [field]: val, page: 1 });
+                    }}
+
+                    styles={{
+                        handle: {
+                            height: 24,
+                            width: 24,
+                            marginTop: -9,
+                            backgroundColor: '#fff',
+                            border: '2px solid #ff3e3e',
+                            opacity: 1,
+                            cursor: 'grab',
+                            boxShadow: 'none'
+                        },
+                        track: {
+                            backgroundColor: '#ff3e3e',
+                            height: 6
+                        },
+                        rail: {
+                            backgroundColor: '#555',
+                            height: 6
+                        }
+                    }}
+                // handleStyle={[
+                //     { height: 24, width: 24, marginTop: -9, backgroundColor: '#fff', border: '2px solid #ff3e3e', opacity: 1, cursor: 'grab' },
+                //     { height: 24, width: 24, marginTop: -9, backgroundColor: '#fff', border: '2px solid #ff3e3e', opacity: 1, cursor: 'grab' }
+                // ]}
+                // range // enab double handle
+                // min={Number(min)}//NUmnber for guarant type
+                // max={Number(max)}
+                // // value={[//if state = 0 & min >0  slider crashes
+                // //     Number(filters[field][0]) || Number(min),
+                // //     Number(filters[field][1]) || Number(max)
+                // // ]}
+                // value={[Number(filters[field][0]), Number(filters[field][1])]}
+                // // value={filters[field]} //  [min, max]
+                // // step={1}
+                // onChange={(val: any) => setFilters({ ...filters, [field]: val, page: 1 })}
+
+                // allowCross={false} //  disable handles crossing
+                // disabled={false}
+
+                // styles={{
+                //     track: { backgroundColor: '#ff3e3e', height: 6 },
+                //     handle: {
+                //         borderColor: '#ff3e3e',
+                //         backgroundColor: '#fff',
+                //         opacity: 1,
+                //         boxShadow: 'none',
+                //         height: 18,
+                //         width: 18,
+                //         marginTop: -6,
+                //         cursor: 'grab'
+                //     },
+                //     rail: { backgroundColor: '#555', height: 6 }
+                // }}
+                />
+            </div>
+        </div>
+    };
+
     if (loaderAllow)
         return <Loader />;
 
@@ -201,7 +310,38 @@ const MainStore = (prop: MS_prop) => {
                 <aside className="filters-sidebar">
                     <h3>Додатковий фільтр</h3>
 
-                    <div className="filter-item">
+                    <div className="filters-body">
+                        {/* render pnly when limits loaded */}
+                        {limits && limits.maxPrice !== undefined ? (
+                            <>
+                                <RangeFilterItem
+                                    // title="Ціна, $ " 
+                                    title={<span>Ціна<br /> </span>}
+                                    field="price"
+                                    min={limits.minPrice} max={limits.maxPrice} unit="$"
+                                />
+                                <RangeFilterItem
+                                    title={<span>Кубатура<br /> </span>} field="cc"
+                                    min={limits.minCC} max={limits.maxCC} unit="см3"
+                                />
+                                <RangeFilterItem
+                                    title={<span>Вага<br /> </span>} field="weight"
+                                    min={limits.minWeight} max={limits.maxWeight} unit="кг"
+                                />
+                                <RangeFilterItem
+                                    title={<span>Потужність<br /> </span>} field="hp"
+                                    min={limits.minHP} max={limits.maxHP} unit="к.с."
+                                />
+                                <RangeFilterItem
+                                    title={<span>Крутний момент<br /> </span>} field="nm"
+                                    min={limits.minNM} max={limits.maxNM} unit="Нм"
+                                />
+                            </>
+                        ) : (
+                            <div className="filters-loading">Завантаження фільтрів...</div>
+                        )}</div>
+
+                    {/* <div className="filter-item">
                         <label>Ціна: ${filters.price[0]} — ${filters.price[1]}</label>
                         <input type="range" min="0" max={limits?.maxPrice} value={filters.price[1]}
                             onChange={e => setFilters({ ...filters, price: [filters.price[0], Number(e.target.value)], page: 1 })} />
@@ -229,7 +369,7 @@ const MainStore = (prop: MS_prop) => {
                         <label>Крутний момент (NM): {filters.nm[0]} — {filters.nm[1]}</label>
                         <input type="range" min="0" max={limits?.maxNM} value={filters.nm[1]}
                             onChange={e => setFilters({ ...filters, nm: [filters.nm[0], Number(e.target.value)], page: 1 })} />
-                    </div>
+                    </div> */}
                 </aside>
 
                 <main className="store-body">
@@ -241,7 +381,8 @@ const MainStore = (prop: MS_prop) => {
                                 value={search}
                                 onChange={e => setSearch(e.target.value)}
                             />
-                            <button className="search-btn">🔍</button>
+                            <div className="search-btn">🔍</div>
+                            {/* <button className="search-btn">🔍</button> */}
                         </div>
                     </div>
 
