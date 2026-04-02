@@ -4,6 +4,7 @@ import ProductModal from '../components/ProductModal';
 import { useNavigate } from 'react-router-dom';
 import type { Product } from '../core/types/Product';
 import Loader from '../components/Loader';
+import StoreModal from '../components/StoreModal';
 
 
 type SM_prop = {
@@ -204,7 +205,7 @@ const StoreManager = (prop: SM_prop) => {
                             setSelectedProduct(null);
                             setProductModalOpen(true);
                         }}>
-                            <div className="plus-wrapper">
+                            <div>
                                 <span className="plus-icon">+</span>
                                 <p>Додати продукт</p>
                             </div>
@@ -240,25 +241,15 @@ const StoreManager = (prop: SM_prop) => {
             }
 
             {
-                isStoreModalOpen && (
-                    <div className="modal-overlay">
-                        <div className="modal-content">
-                            <h2>{store ? "Редагувати магазин" : "Новий магазин"}</h2>
-                            <input value={storeForm.Name} placeholder="Назва магазину"
-                                onChange={e => setStoreForm({ ...storeForm, Name: e.target.value })} />
-                            <textarea value={storeForm.Description} placeholder="Опис"
-                                onChange={e => setStoreForm({ ...storeForm, Description: e.target.value })} />
-                            <input value={storeForm.LogoUrl} placeholder="URL Логотипу"
-                                onChange={e => setStoreForm({ ...storeForm, LogoUrl: e.target.value })} />
-                            <div className="modal-actions">
-                                <button onClick={() => setStoreModalOpen(false)}>Скасувати</button>
-                                <button className="btn-save" onClick={handleStoreSubmit}>Зберегти</button>
-                            </div>
-                        </div>
-                    </div>
-                )
+                isStoreModalOpen &&
+                <StoreModal
+                    store={store}
+                    storeForm={storeForm}
+                    setStoreForm={setStoreForm}
+                    handleStoreSubmit={handleStoreSubmit}
+                    setStoreModalOpen={setStoreModalOpen}
+                />
             }
-
             {
                 isProductModalOpen && (
                     <ProductModal

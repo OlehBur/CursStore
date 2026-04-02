@@ -1,4 +1,5 @@
 import { useState } from "react";
+import "./Modal.css"
 // import "../pages/StoreManager.css"
 
 const ProductModal = ({ product, shopId, onClose, onSave }: any) => {
@@ -79,7 +80,7 @@ const ProductModal = ({ product, shopId, onClose, onSave }: any) => {
                             </button>
                         )}
                     </div>
-                    <button onClick={onClose}>Закрити</button>
+                    <button className="btn-cancel" onClick={onClose}>Скасувати</button>
                     <button className="btn-save" onClick={handleSave}>Зберегти продукт</button>
                 </div>
             </div>

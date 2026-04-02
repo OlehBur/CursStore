@@ -1,5 +1,6 @@
 .stores-page {
     padding: 40px 20px;
+    /* min-width: 1000x; */
     max-width: 1200px;
     margin: 0 auto;
 }
@@ -8,14 +9,14 @@
     text-align: center;
     color: #fff;
     margin-bottom: 40px;
-    font-size: 2.5rem;
+    font-size: 40px;
     text-transform: uppercase;
     letter-spacing: 2px;
 }
 
 .stores-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     gap: 30px;
 }
 

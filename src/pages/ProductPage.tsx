@@ -25,6 +25,10 @@ const ProductPage = (prop: PP_prop) => {
     const navigate = useNavigate();
 
     useEffect(() => {
+        window.scrollTo(0, 0);
+    }, []);//[] exec once in first launch
+
+    useEffect(() => {
         if (prop.prodId === -1)
             return;
 

@@ -1,0 +1,97 @@
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(61, 61, 61, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background: gray;
+    padding: 30px;
+    border-radius: 12px;
+    width: 100%;
+    max-width: 500px;
+    border: 1px solid #ff7b00;
+}
+
+.modal-content.wide {
+    max-width: 800px;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+input,
+textarea {
+    width: 100%;
+    padding: 12px;
+    margin: 8px 0;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    box-sizing: border-box;
+}
+
+.stats label {
+    font-weight: bold;
+    color: #e4e4e4;
+    margin-top: 10px;
+    display: block;
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.btn-delete,
+.btn-cancel,
+.btn-save {
+    color: white;
+    border: 1px solid rgb(255, 255, 255);
+    cursor: pointer;
+}
+
+.btn-delete:hover,
+.btn-cancel:hover,
+.btn-save:hover {
+    border: 1px solid rgb(255, 255, 255);
+}
+
+.btn-delete {
+    background-color: red;
+}
+
+.btn-delete:hover {
+    background-color: #910000;
+}
+
+.btn-cancel {
+    /* background: #ce7b00; */
+    background-color: #3d3d3d;
+}
+
+.btn-cancel:hover {
+    background-color: black;
+}
+
+.btn-save {
+    background: #3fc756;
+    /* border: none; */
+    /* padding: 10px 25px;
+    border-radius: 6px; */
+}
+
+.btn-save:hover {
+    background: #226d2e;
+}

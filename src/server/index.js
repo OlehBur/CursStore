@@ -26,7 +26,16 @@ const db = mysql.createPool({//Connection olnly one (trouble if timeout), otherw
     port: process.env.DB_PORT,
     waitForConnections: true,
     connectionLimit: 10,
+    enableKeepAlive: true,//!!!!
     queueLimit: 0
+});
+db.on('error', (err) => {// \/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
+    console.error('Непередбачена помилка пулу БД:', err);
+    if (err.code === 'PROTOCOL_CONNECTION_LOST' || err.code === 'ECONNRESET') {
+        console.log('З’єднання з БД втрачено. Пул спробує відновитись при наступному запиті.');
+    } else {
+        throw err;
+    }
 });
 
 // db.connect((err) => {
@@ -187,7 +196,7 @@ app.post('/api/fav/toggle', (req, res) => {//fav
 app.get('/api/user-status', (req, res) => {
     const { userId, prodId } = req.query;
 
-    if (!userId || !prodId) 
+    if (!userId || !prodId)
         return res.status(400).json({ error: "Відсутні параметри userId або prodId" });
 
     const cartSql = "SELECT COUNT(*) as count FROM CartItems WHERE UserId = ? AND ProductId = ?";
