@@ -82,8 +82,7 @@
 }
 
 .price-value {
-    color: #00ff7f;
-    /* Той самий зелений, що і в каталозі */
+    color: #00ff7f;                                 /*main light green*/
     font-size: 32px;
     font-weight: 900;
     text-shadow: 0 0 15px rgba(0, 255, 127, 0.3);
@@ -152,8 +151,9 @@
 
 .store-logo-mini {
     width: 70px;
-    height: 70px;
-    border-radius: 50%;
+    /* height: 70px; */
+    border-radius: 12px;
+    background-color: white;
     object-fit: cover;
     border: 1px solid #ff3e3e;
 }

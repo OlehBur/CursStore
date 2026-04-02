@@ -10,11 +10,13 @@ import GamePage from '../pages/GamePage.tsx'
 import SettingsPage from '../pages/SettingsPage.tsx'
 import ProfilePage from '../pages/ProfilePage.tsx'
 import AuthPopup from '../components/AuthWnd.tsx'
-import {  useState } from 'react'
+import { useState } from 'react'
 import StoreManager from '../pages/StoreManager.tsx'
 import MainStore from '../pages/MainStore.tsx'
 import ProductPage from '../pages/ProductPage.tsx'
 import StoresList from '../pages/StoresList.tsx'
+import FAQ_Page from '../pages/FAQ_Page.tsx'
+import ContactsPage from '../pages/ContactsPage.tsx'
 // import Loader from '../components/Loader.tsx'
 
 function App() {
@@ -27,6 +29,8 @@ function App() {
   const store_prof_nav = '/store_profile';
   const stores_nav = "/stores_list";
   const settings_nav = '/settings';
+  const faq_nav = '/faq';
+  const contacts_nav = '/contacts';
   const game_nav = '/game';
 
   const TIMEOUT_DELAY = 400;
@@ -61,7 +65,12 @@ function App() {
               OnProductSelect={(id) => setProdId(id)}
               OnStoreSelect={(id) => setStoreId(id)}
               TIMEOUT_DELAY={TIMEOUT_DELAY}
-            /*auth_nav={auth_nav}*/ profile_nav={profile_nav} store_prof_nav={store_prof_nav} settings_nav={settings_nav} game_nav={game_nav} stores_nav={stores_nav} item_nav={product_nav} />
+            /*auth_nav={auth_nav}*/ profile_nav={profile_nav}
+              store_prof_nav={store_prof_nav} settings_nav={settings_nav}
+              game_nav={game_nav} stores_nav={stores_nav}
+              item_nav={product_nav}
+              contacts_nav={contacts_nav} faq_nav={faq_nav}
+            />
             {/* //   <h1>Ви успішно увійшли!</h1>
           //   <p>Ваш ID користувача в базі: <strong>{userId}</strong></p>
             <button onClick={() => setUserId(-1)}>Вийти</button> */}
@@ -101,6 +110,8 @@ function App() {
           />
         }
       />
+      <Route path={faq_nav} element={<FAQ_Page />} />
+      <Route path={contacts_nav} element={<ContactsPage />} />
       <Route path={settings_nav} element={<SettingsPage />} />
       <Route path={game_nav} element={<GamePage />} />
 

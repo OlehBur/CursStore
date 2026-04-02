@@ -77,9 +77,22 @@ const ProductPage = (prop: PP_prop) => {
         </>;
 
     // get video ID from yt
-    const getYouTubeId = (url: string) => {
-        const match = url.match(/(?:youtu\.be\/|youtube\.com\/(?:.*v=|\/embed\/))([^?&"'>]+)/);
-        return match ? match[1] : null;
+    // const getYouTubeId = (url: string) => {
+    //     const match = url.match(/(?:youtu\.be\/|youtube\.com\/(?:.*v=|\/embed\/))([^?&"'>]+)/);
+    //     return match ? match[1] : null;
+    // };
+
+    const formatVideoUrl = (url: string) => {
+        if (!url) return '';
+
+        // reg for search ID vid in diff formats YouTube
+        const ytRegex = /(?:youtu\.be\/|youtube\.com\/(?:.*v=|\/embed\/))([^?&"'>]+)/;
+        const match = url.match(ytRegex);
+
+        if (match && match[1]) // if yt
+            return `https://www.youtube.com/embed/${match[1]}`;
+
+        return url;//otherwise
     };
 
     return (
@@ -96,8 +109,8 @@ const ProductPage = (prop: PP_prop) => {
                         <div className="aspect-ratio-box">
                             <iframe
                                 className="media-content"
-                                src={`https://www.youtube.com/embed/${getYouTubeId(product.VideoUrl)}`}
-                                title="YouTube video"
+                                src={formatVideoUrl(product.VideoUrl)}//'https://youtu.be/TVjAF7tvGdk?si=K3dfojJNZXfIa1aM'}//`https://www.youtube.com/embed/${getYouTubeId(product.VideoUrl)}`
+                                // title="YouTube video"
                                 style={{ border: "none" }}
                                 allowFullScreen
                             ></iframe>

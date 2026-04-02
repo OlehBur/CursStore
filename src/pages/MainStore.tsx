@@ -20,6 +20,9 @@ type MS_prop = {
     settings_nav: string;
     game_nav: string;
     item_nav: string;
+    contacts_nav: string;
+    faq_nav: string;
+
     TIMEOUT_DELAY: number;
 
     OnLogout: () => void;
@@ -43,7 +46,6 @@ type MS_prop = {
 
 const MainStore = (prop: MS_prop) => {
     const [products, setProducts] = useState<Product[]>([]);
-    const [search, setSearch] = useState('');
     const [totalPages, setTotalPages] = useState(1);
     // const [viewedProduct, setViewedProucts] = useState(0);
     const [limits, setLimits] = useState<Limits | null>(null);
@@ -51,41 +53,92 @@ const MainStore = (prop: MS_prop) => {
     // const TIMEOUT_DELAY = 1000;
     const navigate = useNavigate()
 
-    const [filters, setFilters] = useState({
+    const savedFilters = sessionStorage.getItem('store_filters');
+    const initialFilters = savedFilters ? JSON.parse(savedFilters) : {
         sortBy: 'Popularity',
         order: 'DESC' as 'ASC' | 'DESC',
         page: 1,
-        price: [0, 0],
+        price: [0, 0],// !!! 0 limits not loaded yet
         cc: [0, 0],
         weight: [0, 0],
         hp: [0, 0],
         nm: [0, 0]
+    };
+
+    // const [filters, setFilters] = useState({
+    //     sortBy: 'Popularity',
+    //     order: 'DESC' as 'ASC' | 'DESC',
+    //     page: 1,
+    //     price: [0, 0],
+    //     cc: [0, 0],
+    //     weight: [0, 0],
+    //     hp: [0, 0],
+    //     nm: [0, 0]
+    // });
+    const [filters, setFilters] = useState(() => {
+        const saved = sessionStorage.getItem('store_filters');
+        if (saved) return JSON.parse(saved);
+
+        return initialFilters;
     });
+    // const [search, setSearch] = useState('');
+    const [search, setSearch] = useState(() => sessionStorage.getItem('store_search') || '');
 
     useEffect(() => {// load limits range
         fetch('http://localhost:3001/api/products/limits')
             .then(res => res.json())
             .then((data: Limits) => {
                 setLimits(data);
-                setFilters(prev => ({
-                    ...prev,
-                    price: [0, data.maxPrice],
-                    cc: [0, data.maxCC],
-                    weight: [0, data.maxWeight],
-                    hp: [0, data.maxHP],
-                    nm: [0, data.maxNM]
-                }));
-            });
+
+                setFilters((prev: typeof filters): typeof filters => { // upd only if filters are default (price[1] === 0)
+                    if (prev.price[1] !== 0) return prev; // otherwise
+                    return {
+                        ...prev,
+                        price: [0, data.maxPrice],
+                        cc: [0, data.maxCC],
+                        weight: [0, data.maxWeight],
+                        hp: [0, data.maxHP],
+                        nm: [0, data.maxNM]
+                    };
+                });
+            })
+            .catch(err => console.error("Limits load error:", err));
     }, []);
 
-    useEffect(() => {// load if any filters changed
-        if (limits) {
-            fetchProducts();
-            setTimeout(() => setLoaderAllow(false), prop.TIMEOUT_DELAY);
-        }
-        // else
-        //     setLoaderAllow(true);
-    }, [filters, search]);
+
+    // useEffect(() => {// load if any filters changed
+    //     if (limits) {
+    //         fetchProducts();
+
+    //         //save Filters
+    //         sessionStorage.setItem('store_filters', JSON.stringify(filters));
+    //         sessionStorage.setItem('store_search', search);
+
+    //         setTimeout(() => setLoaderAllow(false), prop.TIMEOUT_DELAY);
+    //     }
+    //     // else
+    //     //     setLoaderAllow(true);
+    // }, [filters, search]);
+    useEffect(() => {
+        if (!limits)
+            return;
+
+        const loadData = async () => {
+            try {
+                await fetchProducts();
+
+                // save Filters
+                sessionStorage.setItem('store_filters', JSON.stringify(filters));
+                sessionStorage.setItem('store_search', search);
+            } catch (e) {
+                console.error("Failed to fetch products", e);
+            } finally {
+                setTimeout(() => setLoaderAllow(false), prop.TIMEOUT_DELAY);
+            }
+        };
+
+        loadData();
+    }, [filters, search, limits]);
 
     const fetchProducts = async () => {
         const query = new URLSearchParams({
@@ -112,6 +165,12 @@ const MainStore = (prop: MS_prop) => {
         // setViewedProucts(data.total.length);
     };
 
+    const resetFilters = () => {
+        sessionStorage.removeItem('store_filters');
+        sessionStorage.removeItem('store_search');
+        window.location.reload();
+    };
+
     if (loaderAllow)
         return <Loader />;
 
@@ -119,7 +178,7 @@ const MainStore = (prop: MS_prop) => {
         <div className="main-layout">
             <header className="main-header">
                 <div className="logo-section">
-                    <span className="brand">HUM ENGINE</span>
+                    <span className="brand" onClick={() => resetFilters()}>HUM ENGINE</span>
                 </div>
                 <nav className="top-nav">
                     <button onClick={() => navigate(prop.stores_nav)}>Магазини</button>
@@ -129,9 +188,10 @@ const MainStore = (prop: MS_prop) => {
                     <button onClick={() => navigate(prop.game_nav)}>Гра</button>
                     <button onClick={() => {
                         prop.OnStoreSelect(-1);
-                        navigate(prop.store_prof_nav); }}>Партнерство</button>
-                    <button>FAQ</button>
-                    <button>Контакти</button>
+                        navigate(prop.store_prof_nav);
+                    }}>Партнерство</button>
+                    <button onClick={() => navigate(prop.faq_nav)}>FAQ</button>
+                    <button onClick={() => navigate(prop.contacts_nav)}>Контакти</button>
                     <button onClick={prop.OnLogout}>Вийти з Акаунту</button>
                 </nav>
             </header>
@@ -238,16 +298,17 @@ const MainStore = (prop: MS_prop) => {
                                 <button
                                     key={i}
                                     className={filters.page === i + 1 ? 'active' : ''}
-                                    onClick={() => setFilters({ ...filters, page: i + 1 })}
-                                >
+                                    onClick={() => {
+                                        setFilters({ ...filters, page: i + 1 });
+                                    }}>
                                     {i + 1}
                                 </button>
                             ))}
                         </div>
                     )}
                 </main>
-            </div>
-        </div>
+            </div >
+        </div >
     );
 };
 

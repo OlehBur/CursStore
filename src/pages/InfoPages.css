@@ -1,0 +1,114 @@
+.info-page-container {
+    padding: 40px 20px;
+    max-width: 900px;
+    margin: 0 auto;
+    color: #eee;
+    text-align: center;
+}
+
+.page-title {
+    font-size: 3rem;
+    margin-bottom: 10px;
+    color:  #ff3e3e; 
+    text-transform: uppercase;
+}
+
+.subtitle {
+    color: #888;
+    margin-bottom: 40px;
+}
+
+/* FAQ */
+.faq-list {
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.faq-card {
+    background: #1a1a1a;
+    padding: 20px;
+    border-radius: 12px;
+    border-left: 4px solid #910000;
+    transition: transform 0.2s;
+}
+
+.faq-card:hover {
+    transform: translateX(10px);
+}
+
+.faq-question {
+    margin: 0 0 10px 0;
+    color: #fff;
+    display: flex;
+    align-items: center;
+}
+
+.faq-question span {
+    background:  #00ff7f;           /*main light green*/
+    color: #000;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    margin-right: 15px;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.faq-answer {
+    color: #aaa;
+    line-height: 1.6;
+}
+
+/* con */
+.contacts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 25px;
+    margin: 40px 0;
+}
+
+.contact-card {
+    background: #1a1a1a;
+    padding: 30px;
+    border-radius: 15px;
+    text-decoration: none;
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: 1px solid #333;
+    transition: 0.3s;
+}
+
+.contact-card:hover {
+    background: #252525;
+    border-color: #910000;
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0, 255, 127, 0.1);
+}
+
+.contact-icon {
+    font-size: 3rem;
+    margin-bottom: 15px;
+}
+
+.contact-label {
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+
+.support-box {
+    margin-top: 50px;
+    padding: 20px;
+    border-top: 1px solid #333;
+    color: #666;
+}
+
+.support-box h3 {
+    color: #888;
+}

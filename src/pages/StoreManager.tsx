@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import type { Product } from '../core/types/Product';
 import Loader from '../components/Loader';
 import StoreModal from '../components/StoreModal';
+import BackButton from '../components/BackToMainButton';
 
 
 type SM_prop = {
@@ -224,14 +225,14 @@ const StoreManager = (prop: SM_prop) => {
                                 <div className='card-content'>
                                     <h3>{p.Name}</h3>
                                     <span className="product-price">${p.Price}</span>
-                                    {isOwner && (
+                                    {isOwner &&
                                         <button className="btn-edit-prod" onClick={(е) => {
                                             е.stopPropagation(); // ban parent events
                                             setSelectedProduct(p);
                                             setProductModalOpen(true);
                                         }}>
                                             Редагувати
-                                        </button>)}
+                                        </button>}
                                 </div>
                             </div>
                         ))}
@@ -260,9 +261,7 @@ const StoreManager = (prop: SM_prop) => {
                     />
                 )
             }
-            <button className="btn-main" onClick={() => navigate('/')}>
-                ← Повернутися на головну
-            </button>
+            <BackButton />
         </div >
     );
 };
