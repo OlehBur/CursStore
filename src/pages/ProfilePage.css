@@ -9,15 +9,17 @@
 .user-icon { font-size: 80px; margin-bottom: 10px; }
 
 .profile-header {
-    background: #638a9d;
+    background: #1a1a1a;
     padding: 30px;
     border-radius: 15px;
     margin-bottom: 30px;
+    border: 1px solid #910000;
+    text-shadow: 2px 2px gray;
 }
 
 .profile-section {
     margin-top: 50px;
-    border-top: 1px solid #ddd;
+    border-top: 1px solid red;
     padding-top: 20px;
 }
 
@@ -27,6 +29,8 @@
     gap: 20px;
     flex-wrap: wrap;
     margin-top: 20px;
+    background: #3d3d3d;
+    border-radius: 12px;
 }
 
 .product-card {
@@ -34,7 +38,7 @@
     border: 1px solid #eee;
     padding: 10px;
     border-radius: 10px;
-    background: white;
+    /* background: #3d3d3d; */
 }
 
 .product-card img {
@@ -65,11 +69,12 @@
 }
 
 .cart-summary {
-    background: #1c8944;
+    background: #1e5a36;
     display: inline-block;
     padding: 10px 20px;
-    border-radius: 8px;
+    border-radius: 12px;
     margin-bottom: 15px;
+    /* border-color: 20px solid #34ff89; */
 }
 
 .empty-msg { color: #888; font-style: italic; }

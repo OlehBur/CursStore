@@ -39,7 +39,7 @@
 
 .btn-edit-store {
     background: rgb(65, 56, 48);
-    border: 1px solid #910000;
+    border: 1px solid #910000;                  /*main dark red*/
     color: red;
     padding: 8px 20px;
     cursor: pointer;

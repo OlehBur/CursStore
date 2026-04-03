@@ -30,45 +30,45 @@ const ProductModal = ({ product, shopId, onClose, onSave }: any) => {
         await fetch(`http://localhost:3001/api/product/${product.Id}`, {
             method: 'DELETE'
         });
-        onSave(); // оновлюємо список
-        onClose(); // закриваємо модалку
+        onSave(); // upd lst
+        onClose(); // close modal
     };
 
     return (
         <div className="modal-overlay">
             <div className="modal-content wide">
-                <h2>{product ? `Редагувати ${product.Name}` : "Додати новий продукт"}</h2>
+                <h2>{product ? `Edit ${product.Name}` : "Add New Product"}</h2>
                 <div className="form-grid">
                     <div className="form-left">
-                        <input placeholder="Назва" value={form.Name}
-                            title="Назва продукту"
+                        <input placeholder="Name" value={form.Name}
+                            title="Product Name"
                             onChange={e => setForm({ ...form, Name: e.target.value })} />
-                        <textarea placeholder="Опис" value={form.Description}
-                            title="Опис Продукту"
+                        <textarea placeholder="Description" value={form.Description}
+                            title="Product Description"
                             onChange={e => setForm({ ...form, Description: e.target.value })} />
-                        <input type="number" placeholder="Ціна ($)" value={form.Price}
-                            title="Введіть ціну в доларовому еквіваленті (найменша частка числа цент)"
+                        <input type="number" placeholder="Price ($)" value={form.Price}
+                            title="Enter the price in USD (smallest unit is cent)"
                             onChange={e => setForm({ ...form, Price: e.target.value === "" ? undefined : Number(e.target.value) })} />
                         <input placeholder="Image URL" value={form.ImageUrl}
-                            title="Посилання на зображення"
+                            title="Image URL (Clicking on the image in the product page will open it in full size)"
                             onChange={e => setForm({ ...form, ImageUrl: e.target.value })} />
                         <input placeholder="Video URL" value={form.VideoUrl}
-                            title="Посилання на відео"
+                            title="Video URL (YouTube or direct link)"
                             onChange={e => setForm({ ...form, VideoUrl: e.target.value })} />
                     </div>
                     <div className="form-right stats">
-                        <label>Характеристики</label>
-                        <input type="number" placeholder="Кубатура (CC)" value={form.CC}
-                            title="Введіть об’єм двигуна у куб. см"
+                        <label>Characteristics</label>
+                        <input type="number" placeholder="Displacement (CC)" value={form.CC}
+                            title="Enter the engine displacement in cubic centimeters (CC)"
                             onChange={e => setForm({ ...form, CC: e.target.value === "" ? undefined : Number(e.target.value) })} />
-                        <input type="number" placeholder="Вага (кг)" value={form.Weight}
-                            title="Введіть фактичну суху вагу техніки"
+                        <input type="number" placeholder="Weight (kg)" value={form.Weight}
+                            title="Enter the actual dry weight of the vehicle in kilograms (kg)"
                             onChange={e => setForm({ ...form, Weight: e.target.value === "" ? undefined : Number(e.target.value) })} />
-                        <input type="number" placeholder="Кінські сили (HP)" value={form.HP}
-                            title="Введіть кількість кінських сил двигуна"
+                        <input type="number" placeholder="Horsepower (HP)" value={form.HP}
+                            title="Enter the horsepower of the engine (HP)"
                             onChange={e => setForm({ ...form, HP: e.target.value === "" ? undefined : Number(e.target.value) })} />
-                        <input type="number" placeholder="Ньютон-метри (NM)" value={form.NM}
-                            title="Введіть Ньютон-метри двигуна"
+                        <input type="number" placeholder="Torque (NM)" value={form.NM}
+                            title="Enter the torque of the engine (NM)"
                             onChange={e => setForm({ ...form, NM: e.target.value === "" ? undefined : Number(e.target.value) })} />
                     </div>
                 </div>
@@ -76,12 +76,12 @@ const ProductModal = ({ product, shopId, onClose, onSave }: any) => {
                     <div className="left-actions">
                         {product && (                    /* if prod exist*/
                             <button className="btn-delete" onClick={handleDelete}>
-                                🗑️ Видалити продукт
+                                🗑️ Delete Product
                             </button>
                         )}
                     </div>
-                    <button className="btn-cancel" onClick={onClose}>Скасувати</button>
-                    <button className="btn-save" onClick={handleSave}>Зберегти продукт</button>
+                    <button className="btn-cancel" onClick={onClose}>Cancel</button>
+                    <button className="btn-save" onClick={handleSave}>Save Product</button>
                 </div>
             </div>
         </div>

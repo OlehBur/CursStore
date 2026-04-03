@@ -34,22 +34,22 @@ type MS_prop = {
     OnStoreSelect: (id: number) => void;
 }
 //  <button onClick={() => navigate('/auth')}>
-//           Авторизація
+//           Authorization
 //         </button> */}
 // {/* <button onClick={() => navigate('/profile')}>
-//   Профіль
+//   Profile
 // </button>
 // <button onClick={() => navigate('/store_profile')}>
-//   Профіль Магазину
+//   Store Profile
 // </button>
 // <button onClick={() => navigate('/settings')}>
-//   Налаштування
+//   Settings
 // </button>
 // <button onClick={() => navigate('/ttt')}>
 //   Tic Tac Toe
 
 const MainStore = (prop: MS_prop) => {
-    const FILTERS_APPLY_DELAY = 300;
+    const FILTERS_APPLY_DELAY = 100;
     const [products, setProducts] = useState<Product[]>([]);
     const [totalPages, setTotalPages] = useState(1);
     // const [viewedProduct, setViewedProucts] = useState(0);
@@ -195,25 +195,25 @@ const MainStore = (prop: MS_prop) => {
                     <span className="brand" onClick={() => resetFilters()}>HUM ENGINE</span>
                 </div>
                 <nav className="top-nav">
-                    <button onClick={() => navigate(prop.stores_nav)}>Магазини</button>
-                    <button onClick={() => navigate(prop.profile_nav)}>Профіль</button>
-                    <button>Обране</button>
-                    <button>Кошик</button>
-                    <button onClick={() => navigate(prop.game_nav)}>Гра</button>
+                    <button onClick={() => navigate(prop.stores_nav)}>Stores</button>
+                    <button onClick={() => navigate(prop.profile_nav)}>Profile</button>
+                    <button>Favorites</button>
+                    <button>Cart</button>
+                    <button onClick={() => navigate(prop.game_nav)}>Game</button>
                     <button onClick={() => {
                         prop.OnStoreSelect(-1);
                         navigate(prop.store_prof_nav);
-                    }}>Партнерство</button>
+                    }}>Partnership</button>
                     <button onClick={() => navigate(prop.faq_nav)}>FAQ</button>
-                    <button onClick={() => navigate(prop.contacts_nav)}>Контакти</button>
-                    <button onClick={prop.OnLogout}>Вийти з Акаунту</button>
+                    <button onClick={() => navigate(prop.contacts_nav)}>Contacts</button>
+                    <button onClick={prop.OnLogout}>Logout</button>
                 </nav>
             </header>
 
             <div className="content-wrapper">
                 {/*extnd filters */}
                 <aside className="filters-sidebar">
-                    <h3>Додатковий фільтр</h3>
+                    <h3>Advanced filter</h3>
 
                     <div className="filters-body">
                         {/* render pnly when limits loaded */}
@@ -221,62 +221,62 @@ const MainStore = (prop: MS_prop) => {
                             <>
                                 <RangeFilter
                                     // title="Ціна, $ " 
-                                    title={<span>Ціна<br /> </span>}
+                                    title={<span>Price<br /> </span>}
                                     field="price"
                                     min={limits.minPrice} max={limits.maxPrice} unit="$"
                                     filters={filters} setFilters={setFilters}
                                 />
                                 <RangeFilter
-                                    title={<span>Кубатура<br /> </span>} field="cc"
-                                    min={limits.minCC} max={limits.maxCC} unit="см3"
+                                    title={<span>Engine Volume<br /> </span>} field="cc"
+                                    min={limits.minCC} max={limits.maxCC} unit="cm³"
                                     filters={filters} setFilters={setFilters}
                                 />
                                 <RangeFilter
-                                    title={<span>Вага<br /> </span>} field="weight"
-                                    min={limits.minWeight} max={limits.maxWeight} unit="кг"
+                                    title={<span>Weight<br /> </span>} field="weight"
+                                    min={limits.minWeight} max={limits.maxWeight} unit="kg"
                                     filters={filters} setFilters={setFilters}
                                 />
                                 <RangeFilter
-                                    title={<span>Потужність<br /> </span>} field="hp"
-                                    min={limits.minHP} max={limits.maxHP} unit="к.с."
+                                    title={<span>Power<br /> </span>} field="hp"
+                                    min={limits.minHP} max={limits.maxHP} unit="hp"
                                     filters={filters} setFilters={setFilters}
                                 />
                                 <RangeFilter
-                                    title={<span>Крутний момент<br /> </span>} field="nm"
-                                    min={limits.minNM} max={limits.maxNM} unit="Нм"
+                                    title={<span>Torque<br /> </span>} field="nm"
+                                    min={limits.minNM} max={limits.maxNM} unit="Nm"
                                     filters={filters} setFilters={setFilters}
                                 />
                             </>
                         ) : (
-                            <div className="filters-loading">Завантаження фільтрів...</div>
+                            <div className="filters-loading">Loading filters...</div>
                         )}</div>
 
                     {/* <div className="filter-item">
-                        <label>Ціна: ${filters.price[0]} — ${filters.price[1]}</label>
+                        <label>Price: ${filters.price[0]} — ${filters.price[1]}</label>
                         <input type="range" min="0" max={limits?.maxPrice} value={filters.price[1]}
                             onChange={e => setFilters({ ...filters, price: [filters.price[0], Number(e.target.value)], page: 1 })} />
                     </div>
 
                     <div className="filter-item">
-                        <label>Кубатура: {filters.cc[0]} — {filters.cc[1]} CC</label>
+                        <label>Engine Volume: {filters.cc[0]} — {filters.cc[1]} cm³</label>
                         <input type="range" min="0" max={limits?.maxCC} value={filters.cc[1]}
                             onChange={e => setFilters({ ...filters, cc: [filters.cc[0], Number(e.target.value)], page: 1 })} />
                     </div>
 
                     <div className="filter-item">
-                        <label>Вага: {filters.weight[0]} — {filters.weight[1]} кг</label>
+                        <label>Weight: {filters.weight[0]} — {filters.weight[1]} kg</label>
                         <input type="range" min="0" max={limits?.maxWeight} value={filters.weight[1]}
                             onChange={e => setFilters({ ...filters, weight: [filters.weight[0], Number(e.target.value)], page: 1 })} />
                     </div>
 
                     <div className="filter-item">
-                        <label>Потужність (HP): {filters.hp[0]} — {filters.hp[1]}</label>
+                        <label>Power (HP): {filters.hp[0]} — {filters.hp[1]}</label>
                         <input type="range" min="0" max={limits?.maxHP} value={filters.hp[1]}
                             onChange={e => setFilters({ ...filters, hp: [filters.hp[0], Number(e.target.value)], page: 1 })} />
                     </div>
 
                     <div className="filter-item">
-                        <label>Крутний момент (NM): {filters.nm[0]} — {filters.nm[1]}</label>
+                        <label>Torque (NM): {filters.nm[0]} — {filters.nm[1]}</label>
                         <input type="range" min="0" max={limits?.maxNM} value={filters.nm[1]}
                             onChange={e => setFilters({ ...filters, nm: [filters.nm[0], Number(e.target.value)], page: 1 })} />
                     </div> */}
@@ -287,7 +287,7 @@ const MainStore = (prop: MS_prop) => {
                         <div className="search-input-wrapper">
                             <input
                                 type="text"
-                                placeholder="Пошук за назвою..."
+                                placeholder="Search by name..."
                                 value={search}
                                 onChange={e => setSearch(e.target.value)}
                             />
@@ -297,7 +297,7 @@ const MainStore = (prop: MS_prop) => {
                     </div>
 
                     <div className="sorting-bar">
-                        <span>Сортувати по:</span>
+                        <span>Sort by:</span>
                         <div className="sort-buttons">
                             {['Popularity', 'Price', 'Name'].map(s => (
                                 <button
@@ -305,11 +305,11 @@ const MainStore = (prop: MS_prop) => {
                                     className={filters.sortBy === s ? 'active' : ''}
                                     onClick={() => setFilters({ ...filters, sortBy: s, page: 1 })}
                                 >
-                                    {s === 'Popularity' ? 'Популярності' : s === 'Price' ? 'Ціні' : 'Назві'}
+                                    {s === 'Popularity' ? 'Popularity' : s === 'Price' ? 'Price' : 'Name'}
                                 </button>
                             ))}
                             <button className="order-btn" onClick={() => setFilters({ ...filters, order: filters.order === 'ASC' ? 'DESC' : 'ASC' })}>
-                                {filters.order === 'ASC' ? '▲ Зростання' : '▼ Спадання'}
+                                {filters.order === 'ASC' ? '▲ Ascending' : '▼ Descending'}
                             </button>
                         </div>
                     </div>

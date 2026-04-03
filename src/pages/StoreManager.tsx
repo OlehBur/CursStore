@@ -83,7 +83,6 @@ const StoreManager = (prop: SM_prop) => {
         }
     };
 
-    // Викликаємо при монтуванні або зміні ID
     useEffect(() => {
         loadData();
     }, [prop.storeId, prop.userId]);
@@ -111,7 +110,7 @@ const StoreManager = (prop: SM_prop) => {
     //                 setStore(null); // store doenst exist yet
     //             }
     //         } catch (e) {
-    //             console.error("Помилка завантаження магазину:", e);
+    //             console.error("Error loading store:", e);
     //         } finally {
     //             setLoading(false);
     //         }
@@ -171,16 +170,16 @@ const StoreManager = (prop: SM_prop) => {
 
     if (allowLoader)//loading
         return <Loader />;
-    //  <div className="loader">Завантаження...</div>;
+    //  <div className="loader">Loading...</div>;
 
     // console.log("Current store state:", store, "isOwner:", isOwner);
     return (
         <div className="store-container">
             {!store ? (
                 <div className="no-store-view">
-                    <h1>Ваш бізнес починається тут</h1>
+                    <h1>Your business starts here</h1>
                     <button className="btn-main" onClick={() => setStoreModalOpen(true)}>
-                        Зареєструйте свій брендовий магазин
+                        Register your brand store
                     </button>
                 </div>
             ) : (
@@ -189,11 +188,11 @@ const StoreManager = (prop: SM_prop) => {
                         <div className="header-content">
                             <img src={store.LogoUrl} alt="Logo" className="store-logo-main" />
                             <div className="store-info">
-                                <h1>{isOwner ? "Профіль " : "Магазин "} "{store.Name}"</h1>
+                                <h1>{isOwner ? "Profile " : "Store "} "{store.Name}"</h1>
                                 <p>{store.Description}</p>
                                 {isOwner && (
                                     <button className="btn-edit-store" onClick={() => setStoreModalOpen(true)}>
-                                        Редагувати дані
+                                        Edit Details
                                     </button>)
                                 }
                             </div>
@@ -208,7 +207,7 @@ const StoreManager = (prop: SM_prop) => {
                         }}>
                             <div>
                                 <span className="plus-icon">+</span>
-                                <p>Додати продукт</p>
+                                <p>Add Product</p>
                             </div>
                         </div>)}
 

@@ -17,12 +17,12 @@
 
     padding: 0;
     border-radius: 15px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
     height: fit-content;
-    position: sticky;
+    position: sticky;           /*!*/
     top: 20px;
     overflow: hidden;
-    border: 1px solid #444;
+    border: 1px solid #ffffff;
 }
 
 .filter-item {

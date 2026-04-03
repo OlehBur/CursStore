@@ -33,25 +33,25 @@ function App() {
   const contacts_nav = '/contacts';
   const game_nav = '/game';
 
-  const TIMEOUT_DELAY = 400;
+  const TIMEOUT_DELAY = 200;
 
   // return <Loader />;
 
   return (
     <Routes>
       <Route path="/" element={<>
-        {/* <h1>Головна сторінка</h1> */}
+        {/* <h1>Main Page</h1> */}
         {/* <button onClick={() => navigate('/auth')}>
-          Авторизація
+          Autorization
         </button> */}
         {/* <button onClick={() => navigate('/profile')}>
-          Профіль
+          Profile
         </button>
         <button onClick={() => navigate('/store_profile')}>
-          Профіль Магазину
+          Store Profile
         </button>
         <button onClick={() => navigate('/settings')}>
-          Налаштування
+          Settings
         </button>
         <button onClick={() => navigate('/ttt')}>
           Tic Tac Toe
@@ -71,9 +71,9 @@ function App() {
               item_nav={product_nav}
               contacts_nav={contacts_nav} faq_nav={faq_nav}
             />
-            {/* //   <h1>Ви успішно увійшли!</h1>
-          //   <p>Ваш ID користувача в базі: <strong>{userId}</strong></p>
-            <button onClick={() => setUserId(-1)}>Вийти</button> */}
+            {/* //   <h1>You have successfully logged in!</h1>
+          //   <p>Your user ID in BD: <strong>{userId}</strong></p>
+            <button onClick={() => setUserId(-1)}>Exit</button> */}
           </div>
         )}
       </>} />

@@ -19,16 +19,16 @@ const StoreModal = (prop: SM_prop) => {
 
     return (<div className="modal-overlay">
         <div className="modal-content">
-            <h2>{prop.store ? "Редагувати магазин" : "Новий магазин"}</h2>
-            <input value={prop.storeForm.Name} placeholder="Назва магазину"
+            <h2>{prop.store ? "Edit store" : "New Store"}</h2>
+            <input value={prop.storeForm.Name} placeholder="Store Name"
                 onChange={e => prop.setStoreForm({ ...prop.storeForm, Name: e.target.value })} />
-            <textarea value={prop.storeForm.Description} placeholder="Опис"
+            <textarea value={prop.storeForm.Description} placeholder="Description"
                 onChange={e => prop.setStoreForm({ ...prop.storeForm, Description: e.target.value })} />
-            <input value={prop.storeForm.LogoUrl} placeholder="URL Логотипу"
+            <input value={prop.storeForm.LogoUrl} placeholder="Logo URL"
                 onChange={e => prop.setStoreForm({ ...prop.storeForm, LogoUrl: e.target.value })} />
             <div className="modal-actions">
-                <button className="btn-cancel" onClick={() => prop.setStoreModalOpen(false)}>Скасувати</button>
-                <button className="btn-save" onClick={prop.handleStoreSubmit}>Зберегти</button>
+                <button className="btn-cancel" onClick={() => prop.setStoreModalOpen(false)}>Cancel</button>
+                <button className="btn-save" onClick={prop.handleStoreSubmit}>Save</button>
             </div>
         </div>
     </div>);

@@ -36,7 +36,7 @@ const Loader: React.FC = () => {
                     />
                 </div>
 
-                <p className="loader-text">Завантаження...</p>
+                <p className="loader-text">Loading...</p>
                 {isLongLoad && <BackButton />}
             </div>
         </>

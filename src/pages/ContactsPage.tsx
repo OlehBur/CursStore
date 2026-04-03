@@ -14,8 +14,8 @@ const ContactsPage = () => {
 
     return (
         <div className="info-page-container">
-            <h1 className="page-title">Наші контакти</h1>
-            <p className="subtitle">Ми завжди на зв'язку з нашою спільнотою</p>
+            <h1 className="page-title">Our Contacts</h1>
+            <p className="subtitle">We are always available to connect with our community</p>
             
             <div className="contacts-grid">
                 {socialLinks.map((link, i) => (
@@ -29,7 +29,7 @@ const ContactsPage = () => {
             </div>
 
             <div className="support-box">
-                <h3>Технічна підтримка</h3>
+                <h3>Technical Support</h3>
                 <p>Email: {SUPPORT_EMAIL}</p>
             </div>
             

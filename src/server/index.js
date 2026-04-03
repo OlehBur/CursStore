@@ -30,9 +30,9 @@ const db = mysql.createPool({//Connection olnly one (trouble if timeout), otherw
     queueLimit: 0
 });
 db.on('error', (err) => {// \/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
-    console.error('Непередбачена помилка пулу БД:', err);
+    console.error('Unexpected DB pool error:', err);
     if (err.code === 'PROTOCOL_CONNECTION_LOST' || err.code === 'ECONNRESET') {
-        console.log('З’єднання з БД втрачено. Пул спробує відновитись при наступному запиті.');
+        console.log('The connection to the DB has been lost. The pool will attempt to reconnect on the next request..');
     } else {
         throw err;
     }
@@ -40,15 +40,15 @@ db.on('error', (err) => {// \/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
 
 // db.connect((err) => {
 //     if (err)
-//         console.error('Помилка підключення до MySQL:', err.message);
+//         console.error('MySQL connection error:', err.message);
 //     else
-//         console.log('Успішно підключено до бази AlwaysData.');
+//         console.log('Unexpected DB pool error:', err.message);
 // });
 db.getConnection((err, connection) => {
     if (err)
-        console.error('Помилка пулу MySQL:', err.message);
+        console.error('Unexpected DB pool error:', err.message);
     else {
-        console.log('Успішно підключено до пулу бази даних.');
+        console.log('Unexpected DB pool error:', err.message);
         connection.release(); //ret connection to pool
     }
 });
@@ -209,7 +209,7 @@ app.get('/api/user-status', (req, res) => {
     const { userId, prodId } = req.query;
 
     if (!userId || !prodId)
-        return res.status(400).json({ error: "Відсутні параметри userId або prodId" });
+        return res.status(400).json({ error: "The userId or prodId parameters are missing" });
 
     const cartSql = "SELECT COUNT(*) as count FROM CartItems WHERE UserId = ? AND ProductId = ?";
     const favSql = "SELECT COUNT(*) as count FROM Favorites WHERE UserId = ? AND ProductId = ?";
@@ -244,7 +244,7 @@ app.post('/api/store', (req, res) => {// create sjop
     const { Name, Description, LogoUrl, userId } = req.body;
 
     if (!Name || !userId) //because Name & User Id not null
-        return res.status(400).json({ error: "Назва та ID користувача обов'язкові" });
+        return res.status(400).json({ error: "The Name and UserId parameters are required" });
 
     const sql = "INSERT INTO Stores (Name, Description, LogoUrl, UserId) VALUES (?, ?, ?, ?)";
     db.query(sql, [Name, Description, LogoUrl, userId], (err, result) => {
@@ -289,7 +289,7 @@ app.get('/api/store/short-details/:shopId', (req, res) => {
     const sql = "SELECT Id, Name, LogoUrl FROM Stores WHERE Id = ?";
     db.query(sql, [shopId], (err, results) => {
         if (err) return res.status(500).json({ error: err.message });
-        if (results.length === 0) return res.status(404).json({ error: "Магазин не знайдено" });
+        if (results.length === 0) return res.status(404).json({ error: "Store not found" });
         res.json(results[0]);
     });
 });
@@ -376,7 +376,7 @@ app.post('/api/register', (req, res) => {
 
     /// check email dupl
     db.query("SELECT Email FROM Users", (err, results) => {
-        if (err) return res.status(500).json({ error: "Помилка бази даних" });
+        if (err) return res.status(500).json({ error: "Database error" });
 
         const emailExists = results.some(u => {
             try {
@@ -385,7 +385,7 @@ app.post('/api/register', (req, res) => {
         });
 
         if (emailExists) {
-            return res.status(400).json({ error: "Користувач з таким Email вже зареєстрований" });
+            return res.status(400).json({ error: "User with this Email is already registered" });
         }
         ///
 
@@ -397,8 +397,8 @@ app.post('/api/register', (req, res) => {
         db.query(sql, [name, encEmail, encPass, tempKey], (err) => {
             if (err) return res.status(500).json({ error: err.message });
 
-            console.log(`Код підтвердження для ${email}: ${tempKey}`);
-            res.json({ success: true, message: "Користувача створено, введіть код" });
+            console.log(`Confirmation code for ${email}: ${tempKey}`);
+            res.json({ success: true, message: "User created, please enter the confirmation code" });
         });
     });
 });
@@ -409,26 +409,26 @@ app.post('/api/register', (req, res) => {
 
 //     const sql = "SELECT id FROM Users WHERE Email = ? AND TempKey = ?";
 //     db.query(sql, [encEmail, code], (err, results) => {
-//         if (err || results.length === 0) return res.status(401).json({ error: "Код невірний" });
+//         if (err || results.length === 0) return res.status(401).json({ error: "Confirmation code is invalid" });
 
 //         const userId = results[0].id;
 //         // TempKey = NULL if key ==
 //         db.query("UPDATE Users SET TempKey = NULL WHERE id = ?", [userId], (err) => {
-//             if (err) return res.status(500).json({ error: "Помилка активації" });
+//             if (err) return res.status(500).json({ error: "Database error" });
 //             res.json({ success: true, userId: userId });
 //         });
 //     });
 // });
 app.post('/api/confirm', (req, res) => {
     const { email, code } = req.body;
-    console.log(`--- Спроба підтвердження для: ${email} ---`);
+    console.log(`Attempting confirmation for: ${email}`);
     const sql = "SELECT Id, Email FROM Users WHERE TempKey = ?";
 
     db.query(sql, [code], (err, results) => {
-        if (err) return res.status(500).json({ error: "Помилка бази даних" });
+        if (err) return res.status(500).json({ error: "Database error" });
 
         if (results.length === 0) {
-            return res.status(401).json({ error: "Код невірний або вже використаний" });
+            return res.status(401).json({ error: "Confirmation code is invalid or already used" });
         }
 
         const user = results[0];
@@ -436,20 +436,20 @@ app.post('/api/confirm', (req, res) => {
         try {
             const decryptedEmail = decrypt(user.Email);
             if (decryptedEmail.trim() !== email.trim()) {
-                console.log(`Email не збігається. В базі: ${decryptedEmail}, прийшло: ${email}`);
-                return res.status(401).json({ error: "Цей код належить іншому користувачу" });
+                console.log(`Email does not match. In database: ${decryptedEmail}, sent: ${email}`);
+                return res.status(401).json({ error: "This code belongs to another user" });
             }
 
             db.query("UPDATE Users SET TempKey = NULL WHERE Id = ?", [user.Id], (err) => {
-                if (err) return res.status(500).json({ error: "Помилка активації" });
+                if (err) return res.status(500).json({ error: "Database error" });
 
-                console.log("Акаунт підтверджено успішно!");
+                console.log("Account confirmed successfully!");
                 res.json({ success: true, userId: user.Id });
             });
 
         } catch (e) {
-            console.error("Помилка при дешифруванні емейла під час підтвердження:", e.message);
-            res.status(500).json({ error: "Помилка обробки даних" });
+            console.error("Error occurred while decrypting email during confirmation:", e.message);
+            res.status(500).json({ error: "Error processing data" });
         }
     });
 });
@@ -458,13 +458,13 @@ app.post('/api/login', (req, res) => {
     const { email, password } = req.body;
 
     if (!email || !password) {
-        return res.status(400).json({ error: "Введіть email та пароль" });
+        return res.status(400).json({ error: "Please enter email and password" });
     }
 
     db.query("SELECT Id, Name, Email, PassEnc FROM Users WHERE TempKey IS NULL", (err, results) => {
         if (err) {
-            console.error("Помилка БД при логіні:", err.message);
-            return res.status(500).json({ error: "Сервіс тимчасово недоступний" });
+            console.error("Database error during login:", err.message);
+            return res.status(500).json({ error: "Service temporarily unavailable" });
         }
 
         // const user = results.find(u => {
@@ -473,9 +473,9 @@ app.post('/api/login', (req, res) => {
         //     } catch (e) { return false; }
         // });
 
-        // if (!user) return res.status(401).json({ error: "Невірний логін або пароль" });
+        // if (!user) return res.status(401).json({ error: "Invalid username or password" });
 
-        // console.log("Вхід успішний для:", user.Name); 
+        // console.log("Login successful for:", user.Name); 
         // res.json({ success: true, userId: user.Id }); 
         try {
             const user = results.find(u => {
@@ -485,12 +485,12 @@ app.post('/api/login', (req, res) => {
             });
 
             if (!user)
-                return res.status(401).json({ error: "Невірний логін або пароль" });
+                return res.status(401).json({ error: "Invalid username or password" });
 
             res.json({ success: true, userId: user.Id });
         } catch (e) {
-            console.error("Помилка обробки даних юзера:", e.message);
-            res.status(500).json({ error: "Помилка авторизації" });
+            console.error("Error processing user data:", e.message);
+            res.status(500).json({ error: "Authorization error" });
         }
     });
 
@@ -502,14 +502,14 @@ app.post('/api/login', (req, res) => {
     // const sql = "SELECT id FROM Users WHERE Email = ? AND PassEnc = ? AND TempKey IS NULL";
     // db.query(sql, [encEmail, encPass], (err, results) => {
     //     if (err || results.length === 0) {
-    //         return res.status(401).json({ error: "Невірні дані або акаунт не підтверджено" });
+    //         return res.status(401).json({ error: "Invalid credentials or account not confirmed" });
     //     }
     //     res.json({ success: true, userId: results[0].id });
     // });
 });
 
 app.use((err, req, res, next) => {
-    console.error("Глобальна помилка:", err.stack);
-    res.status(500).json({ error: "На сервері сталася помилка. Спробуйте пізніше." });
+    console.error("Global error:", err.stack);
+    res.status(500).json({ error: "An error occurred on the server. Please try again later." });
 });
 app.listen(3001, () => console.log('Server running on port 3001'));

@@ -19,13 +19,13 @@ const AuthPopup = ({ onLoginSuccess }: AuthProps) => {
         if (mode !== "confirm") {//email validation
             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             if (!emailRegex.test(form.email)) {
-                alert("Будь ласка, введіть коректну адресу електронної пошти (наприклад, user@example.com).");
+                alert("Please enter a valid email address (for example, user@example.com).");
                 return; //stop
             }
         }
 
         if (mode === "register" && form.password.length < 6) {//pass validation
-            alert("Пароль має бути не менше 6 символів.");
+            alert("Password must be at least 6 characters long.");
             return;
         }
 
@@ -69,27 +69,27 @@ const AuthPopup = ({ onLoginSuccess }: AuthProps) => {
         <div className="popup-overlay">
             <div className="popup">
                 <div className="tabs">
-                    <button className={mode === "login" ? "active" : ""} onClick={() => setMode("login")}>Логін</button>
-                    <button className={mode === "register" ? "active" : ""} onClick={() => setMode("register")}>Реєстрація</button>
+                    <button className={mode === "login" ? "active" : ""} onClick={() => setMode("login")}>Login</button>
+                    <button className={mode === "register" ? "active" : ""} onClick={() => setMode("register")}>Register</button>
                 </div>
 
                 <div className="form">
-                    {mode === "register" && <input name="name" placeholder="Ім’я" value={form.name} onChange={handleChange} />}
+                    {mode === "register" && <input name="name" placeholder="Name" value={form.name} onChange={handleChange} />}
 
                     {mode !== "confirm" ? (
                         <>
                             <input name="email" placeholder="Email" value={form.email} onChange={handleChange} />
-                            <input name="password" type="password" placeholder="Пароль" value={form.password} onChange={handleChange} />
+                            <input name="password" type="password" placeholder="Password" value={form.password} onChange={handleChange} />
                         </>
                     ) : (
                         <>
-                            <p>Введіть код отриманий {form.email}</p>
-                            <input name="code" type="password" placeholder="Код підтвердження" value={form.code} onChange={handleChange} />
+                            <p>Enter the code received at {form.email}</p>
+                            <input name="code" type="password" placeholder="Confirmation Code" value={form.code} onChange={handleChange} />
                         </>
                     )}
 
                     <button onClick={handleAction}>
-                        {mode === "login" ? "Увійти" : mode === "register" ? "Зареєструватись" : "Підтвердити код"}
+                        {mode === "login" ? "Login" : mode === "register" ? "Register" : "Confirm Code"}
                     </button>
                 </div>
             </div>

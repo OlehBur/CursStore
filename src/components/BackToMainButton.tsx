@@ -5,7 +5,7 @@ const BackButton = () => {
     const navigate = useNavigate()
 
     return <button className="back-button" onClick={() => navigate('/')}>
-        ← Повернутися на головну
+        ← Back To Main Page
     </button >;
 }
 

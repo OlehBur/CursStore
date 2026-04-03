@@ -3,13 +3,13 @@ import './InfoPages.css';
 
 const FAQ_Page = () => {
     const questions = [
-        { q: "Що таке HUM ENGINE?", a: "Це платформа для любителів мототехніки, де ви можете переглядати характеристики, порівнювати моделі та знаходити найкращі пропозиції від магазинів-партнерів з використанням зручних фільтрів." },
-        {q:"Як додати товар у Кошик або Обране?", a:"Натисність на картку товару для переходу на його сторінку, де ви знайдете кнопки 'Додати до кошика' та 'Додати до обраного'. Після додавання перегляд списку кошика та обраного доступний у вкладці Профіль."},
-        {q:"Як переглянути список доступних товарів конкретного магазину?", a:"Скористайтесь вкладкою 'Магазини' для перегляду всіх партнерських магазинів. Виберіть цікавий магазин, щоб побачити його профіль з усіма доступними товарами та їх характеристиками. Або перейдіть до магазину через мініпрофіль у товарі."},
+        { q: "What is HUM ENGINE?", a: "It is a platform for motorcycle enthusiasts where you can view specifications, compare models, and find the best offers from partner stores using convenient filters." },
+        {q:"How to add a product to the Cart or Favorites?", a:"Click on the product card to go to its page, where you will find the 'Add to Cart' and 'Add to Favorites' buttons. After adding, you can view the cart and favorites list in the Profile tab."},
+        {q:"How to view the list of available products from a specific store?", a:"Use the 'Stores' tab to view all partner stores. Select an interesting store to see its profile with all available products and their specifications. Or navigate to the store through the mini-profile on the product page."},
         // {q:"", a:""},
-        { q: "Як додати свій товар?", a: "Перейдіть у розділ 'Партнерство' та зареєструйте свій магазин, якщо цього ще не зробили. Після модерації ви зможете додавати товари через панель керування." },
-        { q: "Що за 'Гра' у меню?", a: "Це вбудована міні-гра (Sticks), щоб ви могли розслабитися між пошуком ідеального двигуна." },
-        { q: "Чи є доставка?", a: "Умови доставки залежать від конкретного магазину-продавця. Деталі можна знайти в профілі магазину. Однак на даний момент будь-який спосіб доставки - не реалізований на сайті." }
+        { q: "How to add your product?", a: "Navigate to the 'Partnership' section and register your store if you haven't done so already. After moderation, you will be able to add products through the management panel." },
+        { q: "What is the 'Game' in the menu?", a: "It is an embedded mini-game (Sticks), so you can relax between searching for the perfect engine." },
+        { q: "Is there delivery?", a: "Delivery conditions depend on the specific store-owner. Details can be found in the store profile. However, at the moment any delivery method is not implemented on the website." }
     ];
 
     return (

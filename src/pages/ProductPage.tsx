@@ -65,14 +65,16 @@ const ProductPage = (prop: PP_prop) => {
         });
         const data = await res.json();
 
-        if (type === 'c') setIsInCart(data.action === 'added');
-        else setIsFavorite(data.action === 'added');
+        if (type === 'c') 
+            setIsInCart(data.action === 'added');
+        else 
+            setIsFavorite(data.action === 'added');
     };
 
     if (/*prop.prodId === -1 || !product*/isAllowLoader)
         return <>
             <Loader />
-            {/* <div className="loader">Завантаження...</div> */}
+            {/* <div className="loader">Loading...</div> */}
             {/* <BackButton /> */}
         </>;
 
@@ -130,31 +132,31 @@ const ProductPage = (prop: PP_prop) => {
                         </div>
                     )}
                     <div className="product-price-section">
-                        <span className="price-label">Ціна:</span>
+                        <span className="price-label">Price:</span>
                         <span className="price-value">${product.Price}</span>
                     </div>
                     <button className={`btn-action ${isInCart ? 'active' : ''}`} onClick={() => handleToggle('c')}>
-                        {isInCart ? '❌ Видалити з кошика' : '🛒 Додати в кошик'}
+                        {isInCart ? '❌ Remove from cart' : '🛒 Add to cart'}
                     </button>
                     <button className={`btn-action ${isFavorite ? 'active' : ''}`} onClick={() => handleToggle('f')}>
-                        {isFavorite ? '❤️ В обраному' : '🤍 Додати в обране'}
+                        {isFavorite ? '❤️ In favorites' : '🤍 Add to favorites'}
                     </button>
                 </div>
             </div>
 
             <div className="product-details">
-                <h3>Опис товару</h3>
+                <h3>Description</h3>
                 <p className="description-text">{product.Description}</p>
 
                 <table className="specs-table">
                     <thead>
-                        <tr><th colSpan={2}>Технічні характеристики</th></tr>
+                        <tr><th colSpan={2}>Technical Specifications</th></tr>
                     </thead>
                     <tbody>
-                        <tr><td>Об'єм двигуна</td><td>{product.CC} см³</td></tr>
-                        <tr><td>Вага</td><td>{product.Weight} кг</td></tr>
-                        <tr><td>Потужність</td><td>{product.HP} к.с.</td></tr>
-                        <tr><td>Крутний момент</td><td>{product.NM} Нм</td></tr>
+                        <tr><td>Engine Volume</td><td>{product.CC} cm³</td></tr>
+                        <tr><td>Weight</td><td>{product.Weight} kg</td></tr>
+                        <tr><td>Power</td><td>{product.HP} hp</td></tr>
+                        <tr><td>Torque</td><td>{product.NM} Nm</td></tr>
                     </tbody>
                 </table>
             </div>

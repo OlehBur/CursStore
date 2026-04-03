@@ -41,7 +41,7 @@ const ProfilePage = (prop: PP_prop) => {
                 setFavorites(data.favorites);
                 setCart(data.cart);
             } catch (err) {
-                console.error("Помилка завантаження профілю:", err);
+                console.error("Profile loading error:", err);
             }
         };
 
@@ -51,7 +51,7 @@ const ProfilePage = (prop: PP_prop) => {
 
     if (/*prop.userId === -1*/isAllowLoader)
         return <Loader />
-    // return <div className="profile-container"><h1>Будь ласка, авторизуйтесь</h1>
+    // return <div className="profile-container"><h1>Please, log in</h1>
     //     <BackButton />
     // </div>;
 
@@ -88,15 +88,15 @@ const ProfilePage = (prop: PP_prop) => {
         <div className="profile-container">
             <div className="profile-header">
                 <div className="user-icon">👤</div>
-                <h1>Вітаю Вас, {user?.Name || "Користувач"}!</h1>
+                <h1>Hello, {user?.Name || "User"}!</h1>
                 <div className="user-details">
                     <p><strong>Email:</strong> {user?.Email}</p>
-                    <p><strong>Ідентифікатор користувача:</strong> {prop.userId}</p>
+                    <p><strong>User ID:</strong> {prop.userId}</p>
                 </div>
             </div>
 
             <section className="profile-section">
-                <h2>Обране</h2>
+                <h2>Favorite</h2>
                 {favorites.length > 0 ? (
                     <>
                         <div className="product-list">
@@ -115,16 +115,16 @@ const ProfilePage = (prop: PP_prop) => {
                         </div>
                         {renderPagination(favorites.length, favPage, setFavPage)}
                     </>
-                ) : <p className="empty-msg">Список обраного порожній</p>}
+                ) : <p className="empty-msg">Favorite list is empty</p>}
             </section>
 
             <section className="profile-section">
-                <h2>Кошик</h2>
+                <h2>Shopping Cart</h2>
                 {cart.length > 0 ? (
                     <>
                         <div className="cart-summary">
-                            <p>Всього товарів: <strong>{totalItems}</strong></p>
-                            <p>Загальна сума: <strong>{totalAmount} $</strong></p>
+                            <p>Total Items: <strong>{totalItems}</strong></p>
+                            <p>Total Amount: <strong>{totalAmount} $</strong></p>
                         </div>
                         <div className="product-list">
                             {paginate(cart, cartPage).map((item) => (
@@ -142,7 +142,7 @@ const ProfilePage = (prop: PP_prop) => {
                         </div>
                         {renderPagination(cart.length, cartPage, setCartPage)}
                     </>
-                ) : <p className="empty-msg">Кошик порожній</p>}
+                ) : <p className="empty-msg">Shopping cart is empty</p>}
             </section>
 
             <BackButton />

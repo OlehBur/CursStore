@@ -12,7 +12,7 @@ const TTT_Page = () => {
 
     function setScore(score: number) {
         if (isFirstPlayer)
-            setScore1(score1 + score); // передавай setter з батька
+            setScore1(score1 + score); // setter fr parent
         else
             setScore2(score2 + score);
     }
@@ -25,11 +25,11 @@ const TTT_Page = () => {
             <div className="arena">
                 {isFin && (<div className="winnerOverlay">
                     <div className="winnerCard">
-                        <div className="winnerText">{winnerStr} Переміг</div>
+                        <div className="winnerText">{winnerStr} Wins</div>
                         <button
                             className="restartBtn"
                             onClick={() => window.location.reload()}                        >
-                            Перезапустити гру
+                            Restart Game
                         </button>
                     </div>
                 </div>)}

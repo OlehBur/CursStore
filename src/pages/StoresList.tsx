@@ -20,15 +20,15 @@ const StoresList = ({ setStore, storeProfNav: storeNavPath }: StoresListProps) =
                 setStores(data);
                 setLoading(false);
             })
-            .catch(err => console.error("Помилка завантаження магазинів:", err));
+            .catch(err => console.error("Error loading stores:", err));
     }, []);
 
     if (loading)
-        return <div className="loader">Завантаження брендів...</div>;
+        return <div className="loader">Loading stores...</div>;
 
     return (
         <div className="stores-page">
-            <h1 className="page-title">Наші Партнери та Бренди</h1>
+            <h1 className="page-title">Our Partners and Brands</h1>
             <div className="stores-grid">
                 {stores.map(store => (
                     <div key={store.Id} className="store-card">
@@ -42,13 +42,13 @@ const StoresList = ({ setStore, storeProfNav: storeNavPath }: StoresListProps) =
                         <div className="store-card-info">
                             <h3>{store.Name}</h3>
                             <p className="product-count">
-                                📦 Товарів: <span>{store.ProductCount}</span>
+                                📦 Products: <span>{store.ProductCount}</span>
                             </p>
                             <button className="btn-visit"
                                 onClick={() => {
                                     setStore(store.Id);
                                     navigate(storeNavPath);
-                                }}>Відвідати магазин</button>
+                                }}>Visit Store</button>
                         </div>
                     </div>
                 ))}
