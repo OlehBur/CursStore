@@ -14,6 +14,7 @@ type PP_prop = {
     userId: number;
     itemPageNav: string;
     TIMEOUT_DELAY: number;
+    NavigateGame: () => void | Promise<void>;
 
     OnProductSelect: (id: number) => void;
 }
@@ -30,12 +31,13 @@ const ProfilePage = (prop: PP_prop) => {
     const itemsPerPage = 5;
 
     useEffect(() => {
-        if (prop.userId === -1) return;
+        if (prop.userId === -1)
+             return;
 
         // load prod data, fav & cart
         const fetchProfileData = async () => {
             try {
-                const res = await fetch(`http://localhost:3001/api/profile/${prop.userId}`);
+                const res = await fetch(`/api/profile/${prop.userId}`);
                 const data = await res.json();
                 setUser(data.user);
                 setFavorites(data.favorites);
@@ -50,7 +52,7 @@ const ProfilePage = (prop: PP_prop) => {
     }, [prop.userId]);
 
     if (/*prop.userId === -1*/isAllowLoader)
-        return <Loader />
+        return <Loader NavigateGame={prop.NavigateGame} />
     // return <div className="profile-container"><h1>Please, log in</h1>
     //     <BackButton />
     // </div>;

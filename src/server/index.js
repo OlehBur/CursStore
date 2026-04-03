@@ -3,6 +3,7 @@ import mysql from 'mysql2';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import crypto from 'crypto';
+import nodemailer from 'nodemailer';
 
 dotenv.config();
 const app = express();
@@ -371,12 +372,24 @@ app.get('/api/profile/:Id', (req, res) => {
     });
 });
 
+
+const cleanupExpiredUsers = () => {
+    // del users if tempKey != null (unconfirmed) and confirmTime < now - 1min
+    const sql = "DELETE FROM Users WHERE TempKey IS NOT NULL AND ConfirmTime < (NOW() - INTERVAL 1 MINUTE)";
+    db.query(sql, (err) => {
+        if (err) 
+            console.error("Cleanup error:", err);
+    });
+};
+
 app.post('/api/register', (req, res) => {
+    cleanupExpiredUsers();//Del unconfirm users
     const { name, email, password } = req.body;
 
     /// check email dupl
     db.query("SELECT Email FROM Users", (err, results) => {
-        if (err) return res.status(500).json({ error: "Database error" });
+        if (err) 
+            return res.status(500).json({ error: "Database error" });
 
         const emailExists = results.some(u => {
             try {
@@ -393,23 +406,15 @@ app.post('/api/register', (req, res) => {
         const encPass = encrypt(password);
         const tempKey = Math.random().toString(36).substring(2, 12); // rand 10 sym
 
-        const sql = "INSERT INTO Users (Name, Email, PassEnc, TempKey) VALUES (?, ?, ?, ?)";
+        const sql = "INSERT INTO Users (Name, Email, PassEnc, TempKey, ConfirmTime) VALUES (?, ?, ?, ?, NOW())";
         db.query(sql, [name, encEmail, encPass, tempKey], (err) => {
-            if (err) return res.status(500).json({ error: err.message });
+            if (err)
+                return res.status(500).json({ error: err.message });
 
             console.log(`Confirmation code for ${email}: ${tempKey}`);
             res.json({ success: true, message: "User created, please enter the confirmation code" });
         });
     });
-});
-
-const nodemailer = require('nodemailer');
-const transporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-        user: 'твій_email@gmail.com',
-        pass: 'твій_пароль_додатка_з_16_символів' 
-    }
 });
 
 // app.post('/api/confirm', (req, res) => {
@@ -431,10 +436,11 @@ const transporter = nodemailer.createTransport({
 app.post('/api/confirm', (req, res) => {
     const { email, code } = req.body;
     console.log(`Attempting confirmation for: ${email}`);
-    const sql = "SELECT Id, Email FROM Users WHERE TempKey = ?";
+    const sql = "SELECT Id, Email FROM Users WHERE TempKey = ?AND ConfirmTime > (NOW() - INTERVAL 1 MINUTE)";
 
     db.query(sql, [code], (err, results) => {
-        if (err) return res.status(500).json({ error: "Database error" });
+        if (err)
+             return res.status(500).json({ error: "Database error" });
 
         if (results.length === 0) {
             return res.status(401).json({ error: "Confirmation code is invalid or already used" });
@@ -449,8 +455,9 @@ app.post('/api/confirm', (req, res) => {
                 return res.status(401).json({ error: "This code belongs to another user" });
             }
 
-            db.query("UPDATE Users SET TempKey = NULL WHERE Id = ?", [user.Id], (err) => {
-                if (err) return res.status(500).json({ error: "Database error" });
+            db.query("UPDATE Users SET TempKey = NULL, ConfirmTime = NULL WHERE Id = ?", [user.Id], (err) => {
+                if (err) 
+                    return res.status(500).json({ error: "Database error" });
 
                 console.log("Account confirmed successfully!");
                 res.json({ success: true, userId: user.Id });
@@ -464,6 +471,7 @@ app.post('/api/confirm', (req, res) => {
 });
 
 app.post('/api/login', (req, res) => {
+     cleanupExpiredUsers();//Del unconfirm users
     const { email, password } = req.body;
 
     if (!email || !password) {
@@ -517,8 +525,24 @@ app.post('/api/login', (req, res) => {
     // });
 });
 
+//mail send
+const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+        user: 'email@gmail.com',
+        pass: 'pass_16sym'
+    }
+});
+
 app.use((err, req, res, next) => {
     console.error("Global error:", err.stack);
     res.status(500).json({ error: "An error occurred on the server. Please try again later." });
 });
-app.listen(3001, () => console.log('Server running on port 3001'));
+
+// app.listen(3001, () => console.log('Server running on port 3001'));
+if (process.env.NODE_ENV !== 'production') {
+    const PORT = 3001;
+    app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+}
+
+export default app;//fr es modules

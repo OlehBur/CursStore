@@ -16,7 +16,7 @@ const ProductModal = ({ product, shopId, onClose, onSave }: any) => {
     });
 
     const handleSave = async () => {
-        await fetch('http://localhost:3001/api/product/save', {
+        await fetch('/api/product/save', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ ...form, id: product?.Id, shopId })
@@ -27,7 +27,7 @@ const ProductModal = ({ product, shopId, onClose, onSave }: any) => {
     const handleDelete = async () => {
         if (!window.confirm(`Ви впевнені, що хочете видалити ${product.Name}?`)) return;
 
-        await fetch(`http://localhost:3001/api/product/${product.Id}`, {
+        await fetch(`/api/product/${product.Id}`, {
             method: 'DELETE'
         });
         onSave(); // upd lst

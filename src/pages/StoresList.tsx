@@ -14,7 +14,7 @@ const StoresList = ({ setStore, storeProfNav: storeNavPath }: StoresListProps) =
     const navigate = useNavigate();
 
     useEffect(() => {
-        fetch('http://localhost:3001/api/stores/all')
+        fetch('/api/stores/all')
             .then(res => res.json())
             .then(data => {
                 setStores(data);

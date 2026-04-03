@@ -96,7 +96,9 @@ function App() {
           TIMEOUT_DELAY={TIMEOUT_DELAY}
           userId={userId}
           itemPageNav={product_nav}
-          OnProductSelect={(id) => setProdId(id)} />} />
+          OnProductSelect={(id) => setProdId(id)} 
+          NavigateGame={() => navigate(game_nav)}
+          />} />
       {/* <Route path={store_prof_nav} element={<StoreManager userId={userId} itemPage_nav={product_nav} storeId={store} />} /> */}
       <Route
         path={store_prof_nav}
@@ -106,7 +108,9 @@ function App() {
             userId={userId}
             itemPage_nav={product_nav}
             storeId={storeId}//fr prodPage - setScore dataid | from Parthnersgip - stor may be null
-            SetProductId={(id) => setProdId(id)} />
+            SetProductId={(id) => setProdId(id)}
+            NavigateGame={() => navigate(game_nav)}
+             />
         } />
       <Route
         path="/stores_list"

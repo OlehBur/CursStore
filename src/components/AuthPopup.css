@@ -17,7 +17,7 @@
   border-radius: 8px;
   width: 400px;
   padding: 20px;
-  box-shadow:  0 0 34px 10px #ff3e3e;
+  box-shadow: 0 0 34px 10px #ff3e3e;
   animation: fadeIn 0.3s ease;
 }
 
@@ -42,7 +42,7 @@
 .tabs button.active {
   /* background: #910000; */
   /*main red*/
-    background: #3d3d3d;
+  background: #3d3d3d;
   /*main gray*/
   color: white;
 }
@@ -72,7 +72,7 @@
 }
 
 .form button:hover {
-  background:red;
+  background: red;
 }
 
 @keyframes fadeIn {
@@ -83,6 +83,55 @@
 
   to {
     opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.timer-section {
+  margin: 15px 0;
+  padding: 10px;
+  background-color: rgba(255, 255, 255, 0.05);
+  /* Легкий фон для акценту */
+  border-radius: 8px;
+  text-align: center;
+  border: #910000 solid 2px;
+}
+
+/*  "Enter the code..." */
+.timer-section p {
+  font-size: 16px;
+  color: rgb(255, 146, 146);
+  margin-bottom: 8px;
+}
+
+.timer {
+  /*numbers*/
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 18px;
+  font-weight: bold;
+  color: #ff3e3e;
+  letter-spacing: 1px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+}
+
+/* pulse in last 10s */
+.timer.urgent {
+  animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.08);
+  }
+
+  100% {
     transform: scale(1);
   }
 }

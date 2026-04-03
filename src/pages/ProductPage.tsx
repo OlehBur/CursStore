@@ -34,12 +34,12 @@ const ProductPage = (prop: PP_prop) => {
             return;
 
         // load data & +1 to Popularity 
-        fetch(`http://localhost:3001/api/products/${prop.prodId}`)
+        fetch(`/api/products/${prop.prodId}`)
             .then(res => res.json())
             .then(data => {
                 setProduct(data);
                 if (data.ShopId) {
-                    fetch(`http://localhost:3001/api/store/short-details/${data.ShopId}`)
+                    fetch(`/api/store/short-details/${data.ShopId}`)
                         .then(res => res.json())
                         // .then(storeData => prop.SetStore(storeData));
                         .then(storeData => { setLocalStoreInfo(storeData); });
@@ -47,7 +47,7 @@ const ProductPage = (prop: PP_prop) => {
             });
 
         // check stats (Cart/Favorites)
-        fetch(`http://localhost:3001/api/user-status?userId=${prop.userId}&prodId=${prop.prodId}`)
+        fetch(`/api/user-status?userId=${prop.userId}&prodId=${prop.prodId}`)
             .then(res => res.json())
             .then(status => {
                 setIsInCart(status.inCart);
@@ -59,7 +59,7 @@ const ProductPage = (prop: PP_prop) => {
 
     const handleToggle = async (type: 'c' | 'f') => {
         const endpoint = type === 'c' ? '/api/cart/toggle' : '/api/fav/toggle';
-        const res = await fetch(`http://localhost:3001${endpoint}`, {
+        const res = await fetch(`${endpoint}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ userId: prop.userId, productId: prop.prodId })

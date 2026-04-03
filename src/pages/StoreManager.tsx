@@ -13,6 +13,8 @@ type SM_prop = {
     storeId: number;
     itemPage_nav: string;
     TIMEOUT_DELAY: number;
+
+    NavigateGame: () => void | Promise<void>;
     SetProductId: (id: number) => void;
 }
 
@@ -35,8 +37,8 @@ const StoreManager = (prop: SM_prop) => {
     // useEffect(() => {
     //     // if storeId not ex, get sh by user 
     //     const fetchUrl = prop.storeId
-    //         ? `http://localhost:3001/api/store/details/${prop.storeId}`
-    //         : `http://localhost:3001/api/store/${prop.userId}`;
+    //         ? `/api/store/details/${prop.storeId}`
+    //         : `/api/store/${prop.userId}`;
 
     //     const fetchStoreData = async () => {
     //         const res = await fetch(fetchUrl);
@@ -56,8 +58,8 @@ const StoreManager = (prop: SM_prop) => {
         // else -search user shop
         const hasValidStoreId = typeof prop.storeId === 'number' && prop.storeId > 0;
         const fetchUrl = hasValidStoreId ?//(prop.storeId !== -1)
-            `http://localhost:3001/api/store/details/${prop.storeId}`
-            : `http://localhost:3001/api/store/${prop.userId}`;
+            `/api/store/details/${prop.storeId}`
+            : `/api/store/${prop.userId}`;
         // console.log("Fetching store from:", fetchUrl); 
 
         try {
@@ -91,8 +93,8 @@ const StoreManager = (prop: SM_prop) => {
     //         setLoading(true);
     //         //get URL by ID store or userId (if own)
     //         const fetchUrl = prop.storeId
-    //             ? `http://localhost:3001/api/store/details/${prop.storeId}`
-    //             : `http://localhost:3001/api/store/${prop.userId}`;
+    //             ? `/api/store/details/${prop.storeId}`
+    //             : `/api/store/${prop.userId}`;
 
     //         try {
     //             const res = await fetch(fetchUrl);
@@ -121,7 +123,7 @@ const StoreManager = (prop: SM_prop) => {
 
     // const fetchStoreData = async () => {
     //     try {
-    //         const res = await fetch(`http://localhost:3001/api/store/${prop.userId}`);
+    //         const res = await fetch(`/api/store/${prop.userId}`);
     //         const data = await res.json();
     //         if (data.exists) {
     //             setStore(data.store);
@@ -137,14 +139,14 @@ const StoreManager = (prop: SM_prop) => {
     // };
 
     const fetchProducts = async (shopId: number) => {
-        const res = await fetch(`http://localhost:3001/api/store/${shopId}/products`);
+        const res = await fetch(`/api/store/${shopId}/products`);
         const data = await res.json();
         setProducts(data);
     };
 
     // const handleStoreSubmit = async () => {
     //     const method = store ? 'PUT' : 'POST';
-    //     const url = store ? `http://localhost:3001/api/store/${store.Id}` : `http://localhost:3001/api/store`;
+    //     const url = store ? `/api/store/${store.Id}` : `/api/store`;
 
     //     await fetch(url, {
     //         method,
@@ -156,7 +158,7 @@ const StoreManager = (prop: SM_prop) => {
     // };
     const handleStoreSubmit = async () => {
         const method = store ? 'PUT' : 'POST';
-        const url = store ? `http://localhost:3001/api/store/${store.Id}` : `http://localhost:3001/api/store`;
+        const url = store ? `/api/store/${store.Id}` : `/api/store`;
 
         await fetch(url, {
             method,
@@ -169,7 +171,7 @@ const StoreManager = (prop: SM_prop) => {
     };
 
     if (allowLoader)//loading
-        return <Loader />;
+        return <Loader NavigateGame={prop.NavigateGame} />;
     //  <div className="loader">Loading...</div>;
 
     // console.log("Current store state:", store, "isOwner:", isOwner);

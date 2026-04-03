@@ -93,7 +93,7 @@ const MainStore = (prop: MS_prop) => {
     const [search, setSearch] = useState(() => sessionStorage.getItem('store_search') || '');
 
     useEffect(() => {// load limits range
-        fetch('http://localhost:3001/api/products/limits')
+        fetch('/api/products/limits')
             .then(res => res.json())
             .then((data: Limits) => {
                 setLimits(data);
@@ -172,7 +172,7 @@ const MainStore = (prop: MS_prop) => {
             maxNM: filters.nm[1].toString()
         });
 
-        const res = await fetch(`http://localhost:3001/api/products/search?${query}`);
+        const res = await fetch(`/api/products/search?${query}`);
         const data = await res.json();
         setProducts(data.products);
         setTotalPages(data.totalPages);
