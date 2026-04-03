@@ -1,14 +1,20 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import './Loader.css';
 
 import fTireImg from '../assets/fr_tire_logo.png';
 import rTireImg from '../assets/rr_tire_logo.png';
 import motorcycleImg from '../assets/moto_base_logo.png';
 import BackButton from './BackToMainButton';
+// import { useNavigate } from 'react-router-dom';
 
-const Loader: React.FC = () => {
+type LoaderProps = {
+  NavigateGame: () => void | Promise<void>;
+};
+
+const Loader = ({ NavigateGame: game_nav }: LoaderProps) => {
     const [isLongLoad, setLongLoad] = useState(false);
     const LONG_LOAD_TIME = 3000;//S
+    // const navigate = useNavigate();
 
     useEffect(() => {
         setTimeout(() => setLongLoad(true), LONG_LOAD_TIME);
@@ -37,7 +43,10 @@ const Loader: React.FC = () => {
                 </div>
 
                 <p className="loader-text">Loading...</p>
-                {isLongLoad && <BackButton />}
+                {isLongLoad && <BackButton /> &&
+                    <button className="back-btn" onClick={game_nav}>
+                        Play a Game Instead
+                    </button>}
             </div>
         </>
     );

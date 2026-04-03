@@ -403,6 +403,15 @@ app.post('/api/register', (req, res) => {
     });
 });
 
+const nodemailer = require('nodemailer');
+const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+        user: 'твій_email@gmail.com',
+        pass: 'твій_пароль_додатка_з_16_символів' 
+    }
+});
+
 // app.post('/api/confirm', (req, res) => {
 //     const { email, code } = req.body;
 //     const encEmail = encrypt(email);

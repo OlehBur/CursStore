@@ -186,7 +186,7 @@ const MainStore = (prop: MS_prop) => {
     };
 
     if (loaderAllow)
-        return <Loader />;
+        return <Loader NavigateGame={() => navigate(prop.game_nav)} />;
 
     return (
         <div className="main-layout">

@@ -13,6 +13,7 @@ type PP_prop = {
     TIMEOUT_DELAY: number;
 
     SetStore: (id: number) => void;
+    NavigateGame: () => void | Promise<void>;
 }
 
 const ProductPage = (prop: PP_prop) => {
@@ -65,15 +66,15 @@ const ProductPage = (prop: PP_prop) => {
         });
         const data = await res.json();
 
-        if (type === 'c') 
+        if (type === 'c')
             setIsInCart(data.action === 'added');
-        else 
+        else
             setIsFavorite(data.action === 'added');
     };
 
     if (/*prop.prodId === -1 || !product*/isAllowLoader)
         return <>
-            <Loader />
+            <Loader NavigateGame={prop.NavigateGame} />
             {/* <div className="loader">Loading...</div> */}
             {/* <BackButton /> */}
         </>;
