@@ -59,7 +59,8 @@
   border-radius: 6px;
 }
 
-.form button {
+.form button:not(.guest-btn) {
+  width: 100%;
   padding: 10px;
   background-color: #910000;
   /* background: #3d3d3d; */
@@ -91,7 +92,6 @@
   margin: 15px 0;
   padding: 10px;
   background-color: rgba(255, 255, 255, 0.05);
-  /* Легкий фон для акценту */
   border-radius: 8px;
   text-align: center;
   border: #910000 solid 2px;
@@ -134,4 +134,55 @@
   100% {
     transform: scale(1);
   }
+}
+
+.guest-section {/*guest*/
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+.separator {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    width: 100%;
+    margin-bottom: 15px;
+    color: #888;
+    font-size: 14px;
+}
+
+.separator::before,
+.separator::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid #444; 
+}
+
+.separator:not(:empty)::before {
+    margin-right: .5em;
+}
+
+.separator:not(:empty)::after {
+    margin-left: .5em;
+}
+
+.guest-btn {
+    width: 100%;
+    padding: 12px;
+    background-color: transparent; 
+    border: 1px solid #555;
+    color: #ccc;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 15px;
+    transition: all 0.3s ease;
+}
+
+.guest-btn:hover {
+    background-color: rgba(255, 255, 255, 0.05); 
+    border-color: #888;
+    color: #fff;
 }

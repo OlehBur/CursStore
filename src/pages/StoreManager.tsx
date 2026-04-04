@@ -9,7 +9,7 @@ import BackButton from '../components/BackToMainButton';
 
 
 type SM_prop = {
-    userId: number;
+    userId: number|null;
     storeId: number;
     itemPage_nav: string;
     TIMEOUT_DELAY: number;

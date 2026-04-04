@@ -7,13 +7,42 @@
 .main-header {
     background: #111;
     color: rgb(255, 109, 109);
-    padding: 15px 40px;
+    padding: 15px 90px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
     /* border-radius: 12px; */
 }
+
+.reset-filters-btn {
+    width: 100%;
+    margin-top: 25px;
+    padding: 12px;
+    background-color: transparent;
+    color: #ff4d4d;
+    border: 1px solid #ff4d4d;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.reset-filters-btn:hover {
+    background-color: #ff4d4d;
+    color: #fff;
+    transform: translateY(-2px);
+    border-color: white;
+}
+
+/* .filters-sidebar {
+    display: flex;
+    flex-direction: column;
+    padding-bottom: 20px;
+} */
 
 .brand {
     font-size: 27px;

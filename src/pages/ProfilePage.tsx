@@ -11,7 +11,7 @@ interface UserInfo {
 }
 
 type PP_prop = {
-    userId: number;
+    userId: number|null;
     itemPageNav: string;
     TIMEOUT_DELAY: number;
     NavigateGame: () => void | Promise<void>;

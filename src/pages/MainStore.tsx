@@ -17,7 +17,7 @@ interface Limits {
 }
 
 type MS_prop = {
-    // auth_nav: string;
+    userId: number | null;
     profile_nav: string;
     store_prof_nav: string;
     stores_nav: string;
@@ -50,6 +50,8 @@ type MS_prop = {
 
 const MainStore = (prop: MS_prop) => {
     const FILTERS_APPLY_DELAY = 100;
+    const QUEST_USER_ID = -1;
+
     const [products, setProducts] = useState<Product[]>([]);
     const [totalPages, setTotalPages] = useState(1);
     // const [viewedProduct, setViewedProucts] = useState(0);
@@ -196,13 +198,16 @@ const MainStore = (prop: MS_prop) => {
                 </div>
                 <nav className="top-nav">
                     <button onClick={() => navigate(prop.stores_nav)}>Stores</button>
-                    <button onClick={() => navigate(prop.profile_nav)}>Profile</button>
-                    <button>Favorites</button>
-                    <button>Cart</button>
+                    <button onClick={() => prop.userId != QUEST_USER_ID ? navigate(prop.profile_nav) : alert("Guests cannot access the profile. Please log in to access your profile.")}>Profile</button>
+                    {/* <button>Favorites</button>
+                    <button>Cart</button> */}
                     <button onClick={() => navigate(prop.game_nav)}>Game</button>
                     <button onClick={() => {
-                        prop.OnStoreSelect(-1);
-                        navigate(prop.store_prof_nav);
+                        if (prop.userId != QUEST_USER_ID) {
+                            prop.OnStoreSelect(-1);
+                            navigate(prop.store_prof_nav);
+                        } else
+                            alert("Guests cannot access Partnership. Please log in to access this feature.");
                     }}>Partnership</button>
                     <button onClick={() => navigate(prop.faq_nav)}>FAQ</button>
                     <button onClick={() => navigate(prop.contacts_nav)}>Contacts</button>
@@ -246,6 +251,10 @@ const MainStore = (prop: MS_prop) => {
                                     min={limits.minNM} max={limits.maxNM} unit="Nm"
                                     filters={filters} setFilters={setFilters}
                                 />
+                                <button className="reset-filters-btn"
+                                    onClick={() => resetFilters()}>
+                                    Reset All Filters
+                                </button>
                             </>
                         ) : (
                             <div className="filters-loading">Loading filters...</div>

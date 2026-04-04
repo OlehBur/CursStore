@@ -82,6 +82,22 @@ const AuthPopup = ({ onLoginSuccess }: AuthProps) => {
         }
     };
 
+    const handleGuestLogin = async () => {
+        try {
+            const res = await fetch("/api/login", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email: "guest", password: "guest" }),
+            });
+            const data = await res.json();
+            if (data.userId) {
+                onLoginSuccess(data.userId);
+            }
+        } catch (err) {
+            alert("Guest login failed");
+        }
+    };
+
     return (
         <div className="popup-overlay">
             <div className="popup">
@@ -109,6 +125,14 @@ const AuthPopup = ({ onLoginSuccess }: AuthProps) => {
                     <button onClick={handleAction}>
                         {mode === "login" ? "Login" : mode === "register" ? "Register" : "Confirm Code"}
                     </button>
+                    {mode === "login" && (
+                        <div className="guest-section">
+                            <div className="separator"><span>or</span></div>
+                            <button className="guest-btn" onClick={handleGuestLogin}>
+                                Continue as Guest
+                            </button>
+                        </div>
+                    )}
                 </div>
             </div>
         </div>

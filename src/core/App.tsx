@@ -1,29 +1,21 @@
-// import { useState } from 'react'
-// import reactLogo from '../assets/vite.svg'
-// import viteLogo from '../assets/react.svg'
 import { Routes, Route, useNavigate } from 'react-router-dom'
 import './App.css'
-// import BurButt from '../components/BurButt.tsx'
-// import BurList from '../components/BurList.tsx'
-// import CartButtons from '../components/CartButtons.tsx'
 import GamePage from '../pages/GamePage.tsx'
 import SettingsPage from '../pages/SettingsPage.tsx'
 import ProfilePage from '../pages/ProfilePage.tsx'
 import AuthPopup from '../components/AuthWnd.tsx'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import StoreManager from '../pages/StoreManager.tsx'
 import MainStore from '../pages/MainStore.tsx'
 import ProductPage from '../pages/ProductPage.tsx'
 import StoresList from '../pages/StoresList.tsx'
 import FAQ_Page from '../pages/FAQ_Page.tsx'
 import ContactsPage from '../pages/ContactsPage.tsx'
-// import Loader from '../components/Loader.tsx'
 
 function App() {
-  const [userId, setUserId] = useState<number>(-1);
+  const [userId, setUserId] = useState<number | null>(null);
   const [prodId, setProdId] = useState<number>(-1);
   const [storeId, setStoreId] = useState<number>(-1);//selectedStoreId
-  // const auth_nav = '/auth';
   const profile_nav = '/profile';
   const product_nav = '/product';
   const store_prof_nav = '/store_profile';
@@ -37,35 +29,31 @@ function App() {
 
   const TIMEOUT_DELAY = 400;
 
-  // return <Loader />;
+  useEffect(() => {// get saved userId from sessionStorage on app load
+    const savedId = sessionStorage.getItem("userId");
+    if (savedId) {
+      setUserId(parseInt(savedId));
+    }
+  }, []);
+
+  const handleLoginSuccess = (id: number) => {
+    sessionStorage.setItem("userId", id.toString()); // save
+    setUserId(id);
+  };
+
+  const handleLogout = () => {
+    sessionStorage.removeItem("userId"); // Видаляємо
+    setUserId(null);
+  };
 
   return (
     <Routes>
       <Route path="/" element={<>
-        {/* <h1>Main Page</h1> */}
-        {/* <button onClick={() => navigate('/auth')}>
-          Autorization
-        </button> */}
-        {/* <button onClick={() => navigate('/profile')}>
-          Profile
-        </button>
-        <button onClick={() => navigate('/store_profile')}>
-          Store Profile
-        </button>
-        <button onClick={() => navigate('/settings')}>
-          Settings
-        </button>
-        <button onClick={() => navigate('/ttt')}>
-          Tic Tac Toe
-        </button> */}
-        {userId === -1 &&
-          //? (
-          <AuthPopup onLoginSuccess={(id) => setUserId(id)} />
-        }
-        {/*: (*/}
+        {userId === null && <AuthPopup onLoginSuccess={(id) => handleLoginSuccess(id)} />}
         <div className="welcome-screen">
           <MainStore
-            OnLogout={() => setUserId(-1)}
+            userId={userId}
+            OnLogout={() => handleLogout()}
             OnProductSelect={(id) => setProdId(id)}
             OnStoreSelect={(id) => setStoreId(id)}
             TIMEOUT_DELAY={TIMEOUT_DELAY}
@@ -75,13 +63,8 @@ function App() {
             item_nav={product_nav}
             contacts_nav={contacts_nav} faq_nav={faq_nav}
           />
-          {/* //   <h1>You have successfully logged in!</h1>
-          //   <p>Your user ID in BD: <strong>{userId}</strong></p>
-            <button onClick={() => setUserId(-1)}>Exit</button> */}
         </div>
-        {/*) }*/}
       </>} />
-      {/* <Route path="/auth" element={<AuthPopup />} /> */}
       <Route path={product_nav}
         element={
           <ProductPage
@@ -96,9 +79,9 @@ function App() {
           TIMEOUT_DELAY={TIMEOUT_DELAY}
           userId={userId}
           itemPageNav={product_nav}
-          OnProductSelect={(id) => setProdId(id)} 
+          OnProductSelect={(id) => setProdId(id)}
           NavigateGame={() => navigate(game_nav)}
-          />} />
+        />} />
       {/* <Route path={store_prof_nav} element={<StoreManager userId={userId} itemPage_nav={product_nav} storeId={store} />} /> */}
       <Route
         path={store_prof_nav}
@@ -110,7 +93,7 @@ function App() {
             storeId={storeId}//fr prodPage - setScore dataid | from Parthnersgip - stor may be null
             SetProductId={(id) => setProdId(id)}
             NavigateGame={() => navigate(game_nav)}
-             />
+          />
         } />
       <Route
         path="/stores_list"

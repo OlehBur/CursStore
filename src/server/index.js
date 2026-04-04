@@ -129,39 +129,80 @@ app.get('/api/products/search', (req, res) => {
     const limit = 20;
     const offset = (page - 1) * limit;
 
-    let sql = "SELECT * FROM Products WHERE Name LIKE ?";// def
-    let params = [`%${q}%`];
+    let whereClause = " WHERE Name LIKE ?";
+    let whereParams = [`%${q}%`];
 
-    const addRangeFilter = (field, min, max) => {// filters if exist
-        if (min !== undefined) { sql += ` AND ${field} >= ?`; params.push(min); }
-        if (max !== undefined) { sql += ` AND ${field} <= ?`; params.push(max); }
+    const addRangeToWhere = (field, min, max) => {
+        if (min !== undefined && min !== '') {
+            whereClause += ` AND ${field} >= ?`;
+            whereParams.push(min);
+        }
+        if (max !== undefined && max !== '') {
+            whereClause += ` AND ${field} <= ?`;
+            whereParams.push(max);
+        }
     };
 
-    addRangeFilter('Price', minPrice, maxPrice);
-    addRangeFilter('CC', minCC, maxCC);
-    addRangeFilter('Weight', minWeight, maxWeight);
-    addRangeFilter('HP', minHP, maxHP);
-    addRangeFilter('NM', minNM, maxNM);
+    // let sql = "SELECT * FROM Products WHERE Name LIKE ?";// def
+    // let params = [`%${q}%`];
+    // const addRangeFilter = (field, min, max) => {// filters if exist
+    //     if (min !== undefined) { sql += ` AND ${field} >= ?`; params.push(min); }
+    //     if (max !== undefined) { sql += ` AND ${field} <= ?`; params.push(max); }
+    // };
+
+    addRangeToWhere('Price', minPrice, maxPrice);
+    addRangeToWhere('CC', minCC, maxCC);
+    addRangeToWhere('Weight', minWeight, maxWeight);
+    addRangeToWhere('HP', minHP, maxHP);
+    addRangeToWhere('NM', minNM, maxNM);
+
+    const countSql = `SELECT COUNT(*) as total FROM Products ${whereClause}`;
 
     ////
-    const allowedSort = ['Popularity', 'Price', 'Name'];//avoidance SQL injection) 
-    if (!allowedSort.includes(sortBy)) sortBy = 'Popularity';
-    sql += ` ORDER BY ${sortBy} ${order === 'ASC' ? 'ASC' : 'DESC'}`;
+    // const allowedSort = ['Popularity', 'Price', 'Name'];//avoidance SQL injection) 
+    // if (!allowedSort.includes(sortBy)) sortBy = 'Popularity';
+    // sql += ` ORDER BY ${sortBy} ${order === 'ASC' ? 'ASC' : 'DESC'}`;
 
-    sql += ` LIMIT ? OFFSET ?`;// separate viewed items 
-    params.push(limit, offset);
+    // sql += ` LIMIT ? OFFSET ?`;// separate viewed items 
+    // params.push(limit, offset);
 
-    ////
-    db.query(sql, params, (err, results) => {
-        if (err)
-            return res.status(500).json({ error: err.message });
+    // ////
+    // db.query(sql, params, (err, results) => {
+    //     if (err)
+    //         return res.status(500).json({ error: err.message });
 
-        // const totalPages = Math.ceil(results[0].total / limit);
-        db.query("SELECT COUNT(*) as total FROM Products WHERE Name LIKE ?", [`%${q}%`], (err, countRes) => {//main qnt for separate
+    //     // const totalPages = Math.ceil(results[0].total / limit);
+    //     db.query("SELECT COUNT(*) as total FROM Products WHERE Name LIKE ?", [`%${q}%`], (err, countRes) => {//main qnt for separate
+    //         res.json({
+    //             products: results,
+    //             total: countRes[0].total,
+    //             totalPages: Math.ceil(countRes[0].total / limit)//Math.ceil(countRes[0].total / limit)//totalPages||1 
+    //         });
+    //     });
+    // });
+    db.query(countSql, whereParams, (err, countRes) => {
+        if (err) return res.status(500).json({ error: err.message });
+
+        const totalItems = countRes[0].total;
+        const totalPages = Math.ceil(totalItems / limit) || 1;
+
+        // all prod with filters (SORT + LIMIT)
+        const allowedSort = ['Popularity', 'Price', 'Name'];
+        if (!allowedSort.includes(sortBy)) sortBy = 'Popularity';
+
+        let productsSql = `SELECT * FROM Products ${whereClause}`;
+        productsSql += ` ORDER BY ${sortBy} ${order === 'ASC' ? 'ASC' : 'DESC'}`;
+        productsSql += ` LIMIT ? OFFSET ?`;
+
+        const productsParams = [...whereParams, limit, offset];
+
+        db.query(productsSql, productsParams, (err, results) => {
+            if (err) return res.status(500).json({ error: err.message });
+
             res.json({
                 products: results,
-                total: countRes[0].total,
-                totalPages: Math.ceil(countRes[0].total / limit)//Math.ceil(countRes[0].total / limit)//totalPages||1 
+                total: totalItems,
+                totalPages: totalPages
             });
         });
     });
@@ -377,7 +418,7 @@ const cleanupExpiredUsers = () => {
     // del users if tempKey != null (unconfirmed) and confirmTime < now - 1min
     const sql = "DELETE FROM Users WHERE TempKey IS NOT NULL AND ConfirmTime < (NOW() - INTERVAL 1 MINUTE)";
     db.query(sql, (err) => {
-        if (err) 
+        if (err)
             console.error("Cleanup error:", err);
     });
 };
@@ -388,7 +429,7 @@ app.post('/api/register', (req, res) => {
 
     /// check email dupl
     db.query("SELECT Email FROM Users", (err, results) => {
-        if (err) 
+        if (err)
             return res.status(500).json({ error: "Database error" });
 
         const emailExists = results.some(u => {
@@ -440,7 +481,7 @@ app.post('/api/confirm', (req, res) => {
 
     db.query(sql, [code], (err, results) => {
         if (err)
-             return res.status(500).json({ error: "Database error" });
+            return res.status(500).json({ error: "Database error" });
 
         if (results.length === 0) {
             return res.status(401).json({ error: "Confirmation code is invalid or already used" });
@@ -456,7 +497,7 @@ app.post('/api/confirm', (req, res) => {
             }
 
             db.query("UPDATE Users SET TempKey = NULL, ConfirmTime = NULL WHERE Id = ?", [user.Id], (err) => {
-                if (err) 
+                if (err)
                     return res.status(500).json({ error: "Database error" });
 
                 console.log("Account confirmed successfully!");
@@ -471,8 +512,13 @@ app.post('/api/confirm', (req, res) => {
 });
 
 app.post('/api/login', (req, res) => {
-     cleanupExpiredUsers();//Del unconfirm users
+    cleanupExpiredUsers();//Del unconfirm users
     const { email, password } = req.body;
+
+    //guest login
+    if (email === "guest" && password === "guest") {
+        return res.json({ success: true, userId: -1 });
+    }
 
     if (!email || !password) {
         return res.status(400).json({ error: "Please enter email and password" });

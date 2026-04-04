@@ -6,7 +6,7 @@ import Loader from '../components/Loader';
 
 
 type PP_prop = {
-    userId: number;
+    userId: number | null;
     prodId: number;
     // storeData: any;
     store_prof_nav: string;
@@ -17,6 +17,8 @@ type PP_prop = {
 }
 
 const ProductPage = (prop: PP_prop) => {
+    const QUEST_USER_ID = -1;
+
     const [product, setProduct] = useState<any>(null);
     const [isInCart, setIsInCart] = useState(false);
     const [isFavorite, setIsFavorite] = useState(false);
@@ -136,10 +138,14 @@ const ProductPage = (prop: PP_prop) => {
                         <span className="price-label">Price:</span>
                         <span className="price-value">${product.Price}</span>
                     </div>
-                    <button className={`btn-action ${isInCart ? 'active' : ''}`} onClick={() => handleToggle('c')}>
+                    <button className={`btn-action ${isInCart ? 'active' : ''}`}
+                        onClick={() => prop.userId != QUEST_USER_ID ? 
+                        handleToggle('c') : alert("Guests cannot use the cart. Please log in to access this feature.")}>
                         {isInCart ? '❌ Remove from cart' : '🛒 Add to cart'}
                     </button>
-                    <button className={`btn-action ${isFavorite ? 'active' : ''}`} onClick={() => handleToggle('f')}>
+                    <button className={`btn-action ${isFavorite ? 'active' : ''}`}
+                        onClick={() => prop.userId != QUEST_USER_ID ?
+                            handleToggle('f') : alert("Guests cannot use favorites. Please log in to access this feature.")}>
                         {isFavorite ? '❤️ In favorites' : '🤍 Add to favorites'}
                     </button>
                 </div>
