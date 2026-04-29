@@ -452,28 +452,40 @@ app.post('/api/register', (req, res) => {
             if (err)
                 return res.status(500).json({ error: err.message });
 
-            console.log(`Confirmation code for ${email}: ${tempKey}`);
-            res.json({ success: true, message: "User created, please enter the confirmation code" });
+            const mailOptions = {
+                from: process.env.EMAIL_STORE,
+                to: email, // Адреса, яку ввів користувач
+                subject: 'Підтвердження реєстрації в магазині Hum Engine',
+                html: `
+                    <div style="font-family: Arial, sans-serif; border: 1px solid #ddd; padding: 20px;">
+                        <h2 style="color: #333;">Welcome to MotoShop, ${name}!</h2>
+                        <p>Ваш код підтвердження реєстрації:</p>
+                        <div style="font-size: 24px; font-weight: bold; color: #ff4d4d; letter-spacing: 5px; margin: 20px 0;">
+                            ${tempKey}
+                        </div>
+                        <p>Код дійсний протягом 1 хвилини.</p>
+                        <p><b><u>Будь ласка, не передавайте та не показуйте цей код іншим.</u></b></p>
+                        <hr>
+                        <small>Якщо ви не реєструвалися на нашому сайті, просто ігноруйте цей лист.</small>
+                    </div>
+                `
+            };
+
+            transporter.sendMail(mailOptions, (error, info) => {
+                if (error) {
+                    console.error("Nodemailer error:", error);//if mail not send, but user created, so we can try again or just inform user about error
+                    return res.status(500).json({ error: "Error sending email. Please try again later." });
+                }
+                console.log(`Email sent: ${info.response}`);
+                res.json({ success: true, message: "Код надіслано на вашу пошту!" });
+            });
+
+            // console.log(`Confirmation code for ${email}: ${tempKey}`);
+            // res.json({ success: true, message: "User created, please enter the confirmation code" });
         });
     });
 });
 
-// app.post('/api/confirm', (req, res) => {
-//     const { email, code } = req.body;
-//     const encEmail = encrypt(email);
-
-//     const sql = "SELECT id FROM Users WHERE Email = ? AND TempKey = ?";
-//     db.query(sql, [encEmail, code], (err, results) => {
-//         if (err || results.length === 0) return res.status(401).json({ error: "Confirmation code is invalid" });
-
-//         const userId = results[0].id;
-//         // TempKey = NULL if key ==
-//         db.query("UPDATE Users SET TempKey = NULL WHERE id = ?", [userId], (err) => {
-//             if (err) return res.status(500).json({ error: "Database error" });
-//             res.json({ success: true, userId: userId });
-//         });
-//     });
-// });
 app.post('/api/confirm', (req, res) => {
     const { email, code } = req.body;
     console.log(`Attempting confirmation for: ${email}`);
@@ -572,11 +584,12 @@ app.post('/api/login', (req, res) => {
 });
 
 //mail send
+// const nodemailer = require('nodemailer');
 const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
-        user: 'email@gmail.com',
-        pass: 'pass_16sym'
+        user: process.env.EMAIL_STORE,
+        pass: process.env.EMAIL_APP_PASS
     }
 });
 
