@@ -88,6 +88,23 @@ function decrypt(hash) {
     }
 }
 
+// // test 1 - success decrypt & encrypt
+// const originalText = "MySecretPassword123";
+// const encrypted = encrypt(originalText);
+// const decrypted = decrypt(encrypted);
+
+// console.log("\n\tTest 1\nОригінал:", originalText);
+// console.log("Зашифрований хеш:", encrypted);
+// console.log("Розшифровано назад:", decrypted);
+// console.log("Збігається?", originalText === decrypted ? "ТАК" : "НІ");
+
+// // test 2 - attempt to decrypt fake data
+// const fakeHash = "wrong-iv:wrong-data";
+// const result = decrypt(fakeHash);
+
+// console.log("\n\tTest 2\nРезультат з підробкою:", result === "" ? 
+//     "Помилка (як і очікувалось)" : "Злом алгоритма");
+
 app.get('/api/products/limits', (req, res) => {// get max \min values for filters
     // const sql = `
     //     SELECT 

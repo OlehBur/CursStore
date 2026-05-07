@@ -232,7 +232,7 @@ const StoreManager = (prop: SM_prop) => {
                                             setSelectedProduct(p);
                                             setProductModalOpen(true);
                                         }}>
-                                            Редагувати
+                                            Edit
                                         </button>}
                                 </div>
                             </div>
