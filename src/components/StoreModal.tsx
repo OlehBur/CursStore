@@ -18,7 +18,9 @@ type SM_prop = {
 const StoreModal = (prop: SM_prop) => {
 
     return (<div className="modal-overlay">
-        <div className="modal-content">
+        <div className="modal-content"
+            data-testid="modal-content-store"
+        >
             <h2>{prop.store ? "Edit store" : "New Store"}</h2>
             <input value={prop.storeForm.Name} placeholder="Store Name"
                 onChange={e => prop.setStoreForm({ ...prop.storeForm, Name: e.target.value })} />

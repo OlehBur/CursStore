@@ -116,21 +116,6 @@ const MainStore = (prop: MS_prop) => {
             .catch(err => console.error("Limits load error:", err));
     }, []);
 
-
-    // useEffect(() => {// load if any filters changed
-    //     if (limits) {
-    //         fetchProducts();
-
-    //         //save Filters
-    //         sessionStorage.setItem('store_filters', JSON.stringify(filters));
-    //         sessionStorage.setItem('store_search', search);
-
-    //         setTimeout(() => setLoaderAllow(false), prop.TIMEOUT_DELAY);
-    //     }
-    //     // else
-    //     //     setLoaderAllow(true);
-    // }, [filters, search]);
-
     useEffect(() => {// load if any filters changed
         if (!limits)
             return;
@@ -259,36 +244,6 @@ const MainStore = (prop: MS_prop) => {
                         ) : (
                             <div className="filters-loading">Loading filters...</div>
                         )}</div>
-
-                    {/* <div className="filter-item">
-                        <label>Price: ${filters.price[0]} — ${filters.price[1]}</label>
-                        <input type="range" min="0" max={limits?.maxPrice} value={filters.price[1]}
-                            onChange={e => setFilters({ ...filters, price: [filters.price[0], Number(e.target.value)], page: 1 })} />
-                    </div>
-
-                    <div className="filter-item">
-                        <label>Engine Volume: {filters.cc[0]} — {filters.cc[1]} cm³</label>
-                        <input type="range" min="0" max={limits?.maxCC} value={filters.cc[1]}
-                            onChange={e => setFilters({ ...filters, cc: [filters.cc[0], Number(e.target.value)], page: 1 })} />
-                    </div>
-
-                    <div className="filter-item">
-                        <label>Weight: {filters.weight[0]} — {filters.weight[1]} kg</label>
-                        <input type="range" min="0" max={limits?.maxWeight} value={filters.weight[1]}
-                            onChange={e => setFilters({ ...filters, weight: [filters.weight[0], Number(e.target.value)], page: 1 })} />
-                    </div>
-
-                    <div className="filter-item">
-                        <label>Power (HP): {filters.hp[0]} — {filters.hp[1]}</label>
-                        <input type="range" min="0" max={limits?.maxHP} value={filters.hp[1]}
-                            onChange={e => setFilters({ ...filters, hp: [filters.hp[0], Number(e.target.value)], page: 1 })} />
-                    </div>
-
-                    <div className="filter-item">
-                        <label>Torque (NM): {filters.nm[0]} — {filters.nm[1]}</label>
-                        <input type="range" min="0" max={limits?.maxNM} value={filters.nm[1]}
-                            onChange={e => setFilters({ ...filters, nm: [filters.nm[0], Number(e.target.value)], page: 1 })} />
-                    </div> */}
                 </aside>
 
                 <main className="store-body">
@@ -323,9 +278,9 @@ const MainStore = (prop: MS_prop) => {
                         </div>
                     </div>
 
-                    <div className="products-grid">
+                    <div className="products-grid" data-testid="products-grid">
                         {products.map((p: Product) => (
-                            <div key={p.Id} className="product-item-card" onClick={() => {
+                            <div key={p.Id} data-testid="product-card" className="product-item-card" onClick={() => {
                                 prop.OnProductSelect(p.Id);
                                 navigate(prop.item_nav);
                             }}>

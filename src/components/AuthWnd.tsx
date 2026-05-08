@@ -102,11 +102,15 @@ const AuthPopup = ({ onLoginSuccess }: AuthProps) => {
         <div className="popup-overlay">
             <div className="popup">
                 <div className="tabs">
-                    <button className={mode === "login" ? "active" : ""} onClick={() => setMode("login")}>Login</button>
-                    <button className={mode === "register" ? "active" : ""} onClick={() => setMode("register")}>Register</button>
+                    <button className={mode === "login" ? "active" : ""}
+                        data-testid="login-tab"
+                        onClick={() => setMode("login")}>Login</button>
+                    <button className={mode === "register" ? "active" : ""}
+                        data-testid="register-tab"
+                        onClick={() => setMode("register")}>Register</button>
                 </div>
 
-                <div className="form">
+                <div className="form" data-testid="auth-form">
                     {mode === "register" && <input name="name" placeholder="Name" value={form.name} onChange={handleChange} />}
 
                     {mode !== "confirm" ? (
@@ -117,12 +121,15 @@ const AuthPopup = ({ onLoginSuccess }: AuthProps) => {
                     ) : (
                         <div className="timer-section">
                             <p>Enter the code received at {form.email}</p>
-                            <input name="code" type="password" placeholder="Confirmation Code" value={form.code} onChange={handleChange} />
+                            <input name="code" data-testid="confirmation-code-input"
+                                type="password" placeholder="Confirmation Code"
+                                value={form.code} onChange={handleChange} />
                             <p className={`timer ${timeLeft < 10 ? 'urgent' : ''}`}>Time remaining: 0:{timeLeft < 10 ? `0${timeLeft}` : timeLeft}</p>
                         </div>
                     )}
 
-                    <button onClick={handleAction}>
+                    <button onClick={handleAction}
+                        data-testid="auth-submit-button">
                         {mode === "login" ? "Login" : mode === "register" ? "Register" : "Confirm Code"}
                     </button>
                     {mode === "login" && (

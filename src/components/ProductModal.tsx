@@ -36,7 +36,8 @@ const ProductModal = ({ product, shopId, onClose, onSave }: any) => {
 
     return (
         <div className="modal-overlay">
-            <div className="modal-content wide">
+            <div className="modal-content wide"
+                data-testid="modal-content-product">
                 <h2>{product ? `Edit ${product.Name}` : "Add New Product"}</h2>
                 <div className="form-grid">
                     <div className="form-left">
@@ -64,11 +65,11 @@ const ProductModal = ({ product, shopId, onClose, onSave }: any) => {
                         <input type="number" placeholder="Weight (kg)" value={form.Weight}
                             title="Enter the actual dry weight of the vehicle in kilograms (kg)"
                             onChange={e => setForm({ ...form, Weight: e.target.value === "" ? undefined : Number(e.target.value) })} />
-                        <input type="number" placeholder="Horsepower (HP)" value={form.HP}
-                            title="Enter the horsepower of the engine (HP)"
+                        <input type="number" placeholder="Horsepower (hp)" value={form.HP}
+                            title="Enter the horsepower of the engine (hp)"
                             onChange={e => setForm({ ...form, HP: e.target.value === "" ? undefined : Number(e.target.value) })} />
-                        <input type="number" placeholder="Torque (NM)" value={form.NM}
-                            title="Enter the torque of the engine (NM)"
+                        <input type="number" placeholder="Torque (nm)" value={form.NM}
+                            title="Enter the torque of the engine (nm)"
                             onChange={e => setForm({ ...form, NM: e.target.value === "" ? undefined : Number(e.target.value) })} />
                     </div>
                 </div>

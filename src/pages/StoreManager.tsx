@@ -9,7 +9,7 @@ import BackButton from '../components/BackToMainButton';
 
 
 type SM_prop = {
-    userId: number|null;
+    userId: number | null;
     storeId: number;
     itemPage_nav: string;
     TIMEOUT_DELAY: number;
@@ -203,10 +203,12 @@ const StoreManager = (prop: SM_prop) => {
 
                     <div className="store-products-grid">
                         {/* add new prod block*/}
-                        {isOwner && (<div className="product-card add-new" onClick={() => {
-                            setSelectedProduct(null);
-                            setProductModalOpen(true);
-                        }}>
+                        {isOwner && (<div className="product-card add-new"
+                            data-testid="add-product-block"
+                            onClick={() => {
+                                setSelectedProduct(null);
+                                setProductModalOpen(true);
+                            }} >
                             <div>
                                 <span className="plus-icon">+</span>
                                 <p>Add Product</p>
@@ -216,6 +218,7 @@ const StoreManager = (prop: SM_prop) => {
                         {/* prods blocks */}
                         {products.map((p) => (
                             <div key={p.Id}
+                                data-testid="product-card"
                                 onClick={() => {
                                     setSelectedProduct(p);
                                     prop.SetProductId(p.Id);//for prod page

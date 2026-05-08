@@ -42,7 +42,7 @@ function App() {
   };
 
   const handleLogout = () => {
-    sessionStorage.removeItem("userId"); // Видаляємо
+    sessionStorage.removeItem("userId"); // delete from storage
     setUserId(null);
   };
 
